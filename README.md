@@ -7,4 +7,3 @@ Using ReactJS + Redux toolkit
 
 # FSOFT TEAM 
 
-# frontend-vnexpress-clone
