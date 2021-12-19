@@ -1,5 +1,5 @@
 import React, { useEffect, Fragment } from "react";
-import { Link } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -60,7 +60,7 @@ export const Header = () => {
                                             height: 60,
                                             objectFit: 'cover'
                                         }}
-                                        src= {LOGO}
+                                        src={LOGO}
                                         alt="VN Express"
                                     />
                                 </Link>
@@ -140,7 +140,6 @@ export const Header = () => {
                     </div>
                 </div>
                 {/* <!-- Header Section --> */}
-
                 <div className="navigation-section">
                     <nav className="navbar m-menu navbar-default">
                         <div className="container">
@@ -160,26 +159,70 @@ export const Header = () => {
                             </div>
                             <div className="collapse navbar-collapse" id="#navbar-collapse-1">
                                 <ul className="nav navbar-nav main-nav">
-                                    <li className="active">
-                                        <Link to="/">Home</Link>
+                                    <li className="active" >
+                                        <NavLink to="/" style={{ color: 'red', textDecoration: 'none' }}>Trang chủ</NavLink>
                                     </li>
-                                    <li>
-                                        <Link to="/category/dsadsa">News</Link>
+                                    <li className="dropdown">
+                                        <NavLink to="/category/dsadsa"
+                                            id="dropdownMenuButton" data-toggle="dropdown"
+                                            aria-haspopup="true" aria-expanded="false">
+                                            Thời sự
+                                        </NavLink>
+                                        <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <li><NavLink className="dropdown-item" to="#">Action</NavLink></li>
+                                            <li><NavLink className="dropdown-item" to="#">Action</NavLink></li>
+                                            <li><NavLink className="dropdown-item" to="#">Action</NavLink></li>
+                                            <li><NavLink className="dropdown-item" to="#">Action</NavLink></li>
+                                            <li><NavLink className="dropdown-item" to="#">Action</NavLink></li>
+                                        </ul>
                                     </li>
-                                    <li>
-                                        <Link to="/category/dsadsa">Mobile</Link>
+                                    <li className="dropdown">
+                                        <NavLink to="/category/dsadsa"
+                                            id="dropdownMenuButton" data-toggle="dropdown"
+                                            aria-haspopup="true" aria-expanded="false">
+                                            Thế giới
+                                        </NavLink>
+                                        <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <li><NavLink className="dropdown-item" to="#">Action</NavLink></li>
+                                            <li><NavLink className="dropdown-item" to="#">Action</NavLink></li>
+                                            <li><NavLink className="dropdown-item" to="#">Action</NavLink></li>
+                                        </ul>
                                     </li>
-                                    <li>
-                                        <Link to="/category/dsadsa">Tablet</Link>
+                                    <li className="dropdown">
+                                        <NavLink to="/category/dsadsa"
+                                            id="dropdownMenuButton" data-toggle="dropdown"
+                                            aria-haspopup="true" aria-expanded="false">
+                                            Kinh Doanh
+                                        </NavLink>
+                                        <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton" >
+                                            <li><NavLink className="dropdown-item" to="#">Action</NavLink></li>
+                                            <li><NavLink className="dropdown-item" to="#">Action</NavLink></li>
+                                            <li><NavLink className="dropdown-item" to="#">Action</NavLink></li>
+                                        </ul>
                                     </li>
-                                    <li>
-                                        <Link to="/category/dsadsa">Gadgets</Link>
+                                    <li className="dropdown">
+                                        <NavLink to="/category/dsadsa"
+                                            id="dropdownMenuButton" data-toggle="dropdown"
+                                            aria-haspopup="true" aria-expanded="false">
+                                            Khoa học
+                                        </NavLink>
+                                        <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <li><NavLink className="dropdown-item" to="#">Action</NavLink></li>
+                                            <li><NavLink className="dropdown-item" to="#">Action</NavLink></li>
+                                            <li><NavLink className="dropdown-item" to="#">Action</NavLink></li>
+                                        </ul>
                                     </li>
-                                    <li>
-                                        <Link to="/category/dsadsa">CyberLink</Link>
-                                    </li>
-                                    <li>
-                                        <Link to="/category/dsadsa">Design</Link>
+                                    <li className="dropdown">
+                                        <NavLink to="/category/dsadsa"
+                                            id="dropdownMenuButton" data-toggle="dropdown"
+                                            aria-haspopup="true" aria-expanded="false">
+                                            Giáo dục
+                                        </NavLink>
+                                        <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <li><NavLink className="dropdown-item" to="#">Action</NavLink></li>
+                                            <li><NavLink className="dropdown-item" to="#">Action</NavLink></li>
+                                            <li><NavLink className="dropdown-item" to="#">Action</NavLink></li>
+                                        </ul>
                                     </li>
                                 </ul>
                             </div>
