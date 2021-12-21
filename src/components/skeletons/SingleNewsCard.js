@@ -53,17 +53,11 @@ export const SingleNewsCard = (props) => {
                     <i className="fa fa-rss"> </i>
                 </a>
             </div>
-            {/* entity_social */}
-            <div className="entity_thumb">
-                <img
-                    className="img-responsive"
-                    src={news.thumbnail_url ? news.thumbnail_url : news.thumbnail}
-                    alt="feature-top"
-                />
-            </div>
-            {/* entity_thumb */}
             <div className="entity_content">
-                <p>{news.description}</p>
+                <section
+                    className="not-found-controller"
+                    dangerouslySetInnerHTML={{ __html: news.description }}
+                />
             </div>
         </>
     );

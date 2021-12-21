@@ -12,8 +12,7 @@ import SideBarData from "../../data/sideBarData";
 export default function index() {
     const { hot_news, trending_new,
         editor_choice, post_catalog_one,
-        post_catalog_two, post_catalog_three,
-        post_catalog_four, post_catalog_five } = HomePageData;
+        post_catalog_two } = HomePageData;
     const { popular_news, most_commented } = SideBarData;
 
     return (
@@ -32,11 +31,8 @@ export default function index() {
                         <div className="col-md-8">
                             {post_catalog_one ? (
                                 <NewsListCard
-                                    news_catalog_one={post_catalog_one}
-                                    news_catalog_two={post_catalog_two}
-                                    news_catalog_three={post_catalog_three}
-                                    news_catalog_four={post_catalog_four}
-                                    news_catalog_five={post_catalog_five}
+                                    catalogListOne={post_catalog_one}
+                                    catalogListTwo={post_catalog_two}
                                 />
                             ) : (
                                 <Loading />

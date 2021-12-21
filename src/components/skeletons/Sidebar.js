@@ -35,6 +35,7 @@ export const Sidebar = (props) => {
                                                 style={{
                                                     height: 100,
                                                     width: 100,
+                                                    objectFit: "cover"
                                                 }}
                                                 className="media-object"
                                                 src={
@@ -146,6 +147,7 @@ export const Sidebar = (props) => {
                                                 style={{
                                                     height: 100,
                                                     width: 100,
+                                                    objectFit: "cover"
                                                 }}
                                                 className="media-object"
                                                 src={

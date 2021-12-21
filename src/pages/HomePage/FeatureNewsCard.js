@@ -31,7 +31,7 @@ export const FeatureNewsCard = (props) => {
 
                 <div className="feature_article_inner">
                   <div className="tag_lg red">
-                    <a href="category.html">Hot News</a>
+                    <a href="category.html">Tin nóng</a>
                   </div>
                   <div className="feature_article_title">
                     <h1>
@@ -42,40 +42,11 @@ export const FeatureNewsCard = (props) => {
                   </div>
                   {/* <!-- feature_article_title --> */}
 
-                  <div className="feature_article_date">
-                    <a href="#" target="_self">
-                      {hot_news.author &&
-                        hot_news.author.user.username}
-                    </a>
-                    ,{"         "}
-                    <a>
-                      {moment(hot_news.timestamp).format(
-                        "Do MMM  YYYY"
-                      )}
-                    </a>
-                  </div>
-                  {/* <!-- feature_article_date --> */}
-
                   <div className="feature_article_content">
                     {hot_news.description.substring(0, 90)}
                     ...
                   </div>
                   {/* <!-- feature_article_content --> */}
-
-                  <div className="article_social">
-                    <span>
-                      <i className="fa fa-share-alt"></i>
-                      <a href="#">424</a>Shares
-                    </span>
-                    <span>
-                      <i className="fa fa-comments-o"></i>
-                      <a href="#">
-                        {hot_news.total_comment_count}
-                      </a>
-                      Comments
-                    </span>
-                  </div>
-                  {/* <!-- article_social --> */}
                 </div>
                 {/* <!-- feature_article_inner --> */}
               </div>
@@ -97,11 +68,7 @@ export const FeatureNewsCard = (props) => {
                     src={
                       trending_new.thumbnail_url
                         ? trending_new.thumbnail_url
-                        : trending_new.thumbnail.startsWith(
-                          "/media"
-                        )
-                          ? `http://localhost:8000${trending_new.thumbnail}`
-                          : `http://localhost:8000/media/${trending_new.thumbnail}`
+                        : ""
                     }
                     alt="feature-top"
                   />
@@ -110,7 +77,7 @@ export const FeatureNewsCard = (props) => {
 
                 <div className="feature_article_inner">
                   <div className="tag_lg purple">
-                    <a href="category.html">Top Viewed</a>
+                    <a href="category.html">Đáng chú ý</a>
                   </div>
                   <div className="feature_article_title">
                     <h1>
@@ -122,22 +89,6 @@ export const FeatureNewsCard = (props) => {
                     </h1>
                   </div>
                   {/* <!-- feature_article_title --> */}
-
-                  <div className="feature_article_date">
-                    <a href="#" target="_self">
-                      {trending_new.author &&
-                        trending_new.author.user
-                          .username}
-                    </a>
-                    ,
-                    <a href="#" target="_self">
-                      {moment(
-                        trending_new.timestamp
-                      ).format("Do MMM  YYYY")}
-                    </a>
-                  </div>
-                  {/* <!-- feature_article_date --> */}
-
                   <div className="feature_article_content">
                     {trending_new.description.substring(
                       0,
@@ -146,22 +97,6 @@ export const FeatureNewsCard = (props) => {
                     ...
                   </div>
                   {/* <!-- feature_article_content --> */}
-
-                  <div className="article_social">
-                    <span>
-                      <i className="fa fa-share-alt"></i>
-                      <a href="#">424</a>Shares
-                    </span>
-                    <span>
-                      <i className="fa fa-comments-o"></i>
-                      <a href="#">
-                        {
-                          trending_new.total_comment_count
-                        }
-                      </a>
-                      Comments
-                    </span>
-                  </div>
                   {/* <!-- article_social --> */}
                 </div>
                 {/* <!-- feature_article_inner --> */}
@@ -197,7 +132,7 @@ export const FeatureNewsCard = (props) => {
 
                 <div className="feature_article_inner">
                   <div className="tag_lg blue">
-                    <a href="category.html">Top Viewed</a>
+                    <a href="category.html">Đáng chú ý</a>
                   </div>
 
                   <div className="feature_article_title">
@@ -210,22 +145,6 @@ export const FeatureNewsCard = (props) => {
                     </h1>
                   </div>
                   {/* <!-- feature_article_title --> */}
-
-                  <div className="feature_article_date">
-                    <a href="#" target="_self">
-                      {editor_choice.author &&
-                        editor_choice.author.user
-                          .username}
-                    </a>
-                    ,
-                    <a href="#" target="_self">
-                      {moment(
-                        editor_choice.timestamp
-                      ).format("Do MMM  YYYY")}
-                    </a>
-                  </div>
-                  {/* <!-- feature_article_date --> */}
-
                   <div className="feature_article_content">
                     {editor_choice.description.substring(
                       0,
@@ -234,23 +153,6 @@ export const FeatureNewsCard = (props) => {
                     ...
                   </div>
                   {/* <!-- feature_article_content --> */}
-
-                  <div className="article_social">
-                    <span>
-                      <i className="fa fa-share-alt"></i>
-                      <a href="#">424</a>Shares
-                    </span>
-                    <span>
-                      <i className="fa fa-comments-o"></i>
-                      <a href="#">
-                        {
-                          editor_choice.total_comment_count
-                        }
-                      </a>
-                      Comments
-                    </span>
-                  </div>
-                  {/* <!-- article_social --> */}
                 </div>
                 {/* <!-- feature_article_inner --> */}
               </div>
