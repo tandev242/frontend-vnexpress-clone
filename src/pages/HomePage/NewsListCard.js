@@ -1,26 +1,23 @@
 import React from "react";
 import { NewsCardOne } from "./NewsCardOne";
-import { NewscardTwo } from "./NewsCardTwo";
+import { NewsCardTwo } from "./NewsCardTwo";
 
 
 export default function NewsListCard(props) {
-    const { catalogListOne, catalogListTwo } = props;
+    const { catalogListOne, catalogListTwo, catalogListThree, catalogListFour } = props;
     return (
         <>
             <div className="category_section item">
-                <NewscardTwo newslist={catalogListTwo} />
+                <NewsCardOne newsList={catalogListOne} />
             </div>
             <div className="category_section item">
-                <NewsCardOne newslist={catalogListOne} />
+                <NewsCardTwo newsList={catalogListTwo} />
             </div>
             <div className="category_section item">
-                <NewsCardOne newslist={catalogListOne} />
+                <NewsCardOne newsList={catalogListThree} />
             </div>
             <div className="category_section item">
-                <NewscardTwo newslist={catalogListTwo} />
-            </div>
-            <div className="category_section item">
-                <NewsCardOne newslist={catalogListOne} />
+                <NewsCardTwo newsList={catalogListFour} />
             </div>
         </>
     );

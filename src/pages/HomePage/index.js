@@ -3,25 +3,22 @@ import { FeatureNewsCard } from "./FeatureNewsCard";
 import { Loading } from "../../components/includes/Loading";
 import { NewsLetter } from "../../components/includes/NewsLetter";
 import NewsListCard from "./NewsListCard";
+import { useSelector, useDispatch } from "react-redux";
 
-// Cho nay de data mau khi minh co data duoi db thi sua lai
-import HomePageData from "../../data/homePageData";
-import SideBarData from "../../data/sideBarData";
-
-
-export default function index() {
-    const { hot_news, trending_new,
-        editor_choice, post_catalog_one,
-        post_catalog_two } = HomePageData;
-    const { popular_news, most_commented } = SideBarData;
+export default function Index() {
+    const { lastPosts } = useSelector(state => state.post);
+    const catalogListOne = lastPosts.slice(3, 7)
+    const catalogListTwo = lastPosts.slice(7, 10)
+    const catalogListThree = lastPosts.slice(10, 14)
+    const catalogListFour = lastPosts.slice(14, 17)
 
     return (
         <>
             <section id="feature_news_section" className="feature_news_section">
                 <FeatureNewsCard
-                    hot_news={hot_news}
-                    trending_new={trending_new}
-                    editor_choice={editor_choice}
+                    hotNews={lastPosts[0]}
+                    trendingNews={lastPosts[1]}
+                    editorChoice={lastPosts[2]}
                 />
             </section>
             {/* <!-- Feature News Section --> */}
@@ -29,20 +26,19 @@ export default function index() {
                 <div className="container">
                     <div className="row">
                         <div className="col-md-8">
-                            {post_catalog_one ? (
+                            {catalogListOne ? (
                                 <NewsListCard
-                                    catalogListOne={post_catalog_one}
-                                    catalogListTwo={post_catalog_two}
+                                    catalogListOne={catalogListOne}
+                                    catalogListTwo={catalogListTwo}
+                                    catalogListThree={catalogListThree}
+                                    catalogListFour={catalogListFour}
                                 />
                             ) : (
                                 <Loading />
                             )}
                         </div>
 
-                        <Sidebar
-                            popular_news={popular_news}
-                            most_commented_news={most_commented}
-                        />
+                        <Sidebar />
                     </div>
                 </div>
             </section>

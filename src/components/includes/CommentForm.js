@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 // import { toast } from "react-toastify";
 
 export const CommentForm = (props) => {
-    const { news, slug } = props;
+    const { news } = props;
     const [data, setData] = useState({
         post: "",
         comment: "",
@@ -28,7 +28,6 @@ export const CommentForm = (props) => {
     return (
         <Fragment>
             {/*Entity Title */}
-
             <div className="entity_comment_from">
                 <form onSubmit={handleSubmit} method="post">
                     <div className="form-group comment">

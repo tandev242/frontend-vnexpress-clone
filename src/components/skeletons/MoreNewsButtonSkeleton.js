@@ -6,7 +6,7 @@ export const MoreNewsSkeleton = (props) => {
         <>
             {index === news.length - 1 ? (
                 <p className="divider" style={{ marginTop: 20 }}>
-                    <Link to={`/category/${slug}`}>More News&nbsp;&raquo;</Link>
+                    <Link to={`/collections${slug}`}>Xem thêm&nbsp;&raquo;</Link>
                 </p>
             ) : (
                 ""

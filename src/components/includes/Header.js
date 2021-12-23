@@ -8,7 +8,8 @@ import LOGO from '../../assets/images/logo-vnexpress.png';
 
 export const Header = () => {
 
-    const isAuthenticated = false;
+    const { categories } = useSelector(state => state.post);
+    const authenticated = false;
     const user = null;
 
     const HandleLogout = () => {
@@ -70,7 +71,7 @@ export const Header = () => {
                         <div className="col-md-4">
                             <div className="right_section">
                                 <ul className="nav navbar-nav">
-                                    {!isAuthenticated && (
+                                    {!authenticated && (
                                         <Fragment>
                                             <li style={{ marginBottom: 2 }}>
                                                 <Link to="/login">Login</Link>
@@ -80,10 +81,10 @@ export const Header = () => {
                                             </li>
                                         </Fragment>
                                     )}
-                                    {isAuthenticated && user.user && (
+                                    {authenticated && user.user && (
                                         <Fragment>
                                             <li className="dropdown lang">
-                                                <li style={{ marginTop: 1, marginRight: 10 }}>Wellcome <span style={{ marginLeft: 5 }}>{user.user.username.toUpperCase()}</span></li>
+                                                <li style={{ marginTop: 1, marginRight: 10 }}>Welcome <span style={{ marginLeft: 5 }}>{user.user.username.toUpperCase()}</span></li>
                                                 <ul className="dropdown-menu">
                                                     <li
                                                         onClick={HandleLogout}
@@ -157,73 +158,32 @@ export const Header = () => {
                                     <span className="icon-bar"></span>
                                 </button>
                             </div>
-                            <div className="collapse navbar-collapse" id="#navbar-collapse-1">
-                                <ul className="nav navbar-nav main-nav">
+                            <div className="collapse navbar-collapse category" id="#navbar-collapse-1">
+                                <ul className="nav navbar-nav main-nav" >
                                     <li className="active" >
                                         <NavLink to="/" style={{ color: 'red', textDecoration: 'none' }}>Trang chủ</NavLink>
                                     </li>
-                                    <li className="dropdown">
-                                        <NavLink to="/category/dsadsa"
-                                            id="dropdownMenuButton" data-toggle="dropdown"
-                                            aria-haspopup="true" aria-expanded="false">
-                                            Thời sự
-                                        </NavLink>
-                                        <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                            <li><NavLink className="dropdown-item" to="#">Action</NavLink></li>
-                                            <li><NavLink className="dropdown-item" to="#">Action</NavLink></li>
-                                            <li><NavLink className="dropdown-item" to="#">Action</NavLink></li>
-                                            <li><NavLink className="dropdown-item" to="#">Action</NavLink></li>
-                                            <li><NavLink className="dropdown-item" to="#">Action</NavLink></li>
-                                        </ul>
-                                    </li>
-                                    <li className="dropdown">
-                                        <NavLink to="/category/dsadsa"
-                                            id="dropdownMenuButton" data-toggle="dropdown"
-                                            aria-haspopup="true" aria-expanded="false">
-                                            Thế giới
-                                        </NavLink>
-                                        <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                            <li><NavLink className="dropdown-item" to="#">Action</NavLink></li>
-                                            <li><NavLink className="dropdown-item" to="#">Action</NavLink></li>
-                                            <li><NavLink className="dropdown-item" to="#">Action</NavLink></li>
-                                        </ul>
-                                    </li>
-                                    <li className="dropdown">
-                                        <NavLink to="/category/dsadsa"
-                                            id="dropdownMenuButton" data-toggle="dropdown"
-                                            aria-haspopup="true" aria-expanded="false">
-                                            Kinh Doanh
-                                        </NavLink>
-                                        <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton" >
-                                            <li><NavLink className="dropdown-item" to="#">Action</NavLink></li>
-                                            <li><NavLink className="dropdown-item" to="#">Action</NavLink></li>
-                                            <li><NavLink className="dropdown-item" to="#">Action</NavLink></li>
-                                        </ul>
-                                    </li>
-                                    <li className="dropdown">
-                                        <NavLink to="/category/dsadsa"
-                                            id="dropdownMenuButton" data-toggle="dropdown"
-                                            aria-haspopup="true" aria-expanded="false">
-                                            Khoa học
-                                        </NavLink>
-                                        <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                            <li><NavLink className="dropdown-item" to="#">Action</NavLink></li>
-                                            <li><NavLink className="dropdown-item" to="#">Action</NavLink></li>
-                                            <li><NavLink className="dropdown-item" to="#">Action</NavLink></li>
-                                        </ul>
-                                    </li>
-                                    <li className="dropdown">
-                                        <NavLink to="/category/dsadsa"
-                                            id="dropdownMenuButton" data-toggle="dropdown"
-                                            aria-haspopup="true" aria-expanded="false">
-                                            Giáo dục
-                                        </NavLink>
-                                        <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                            <li><NavLink className="dropdown-item" to="#">Action</NavLink></li>
-                                            <li><NavLink className="dropdown-item" to="#">Action</NavLink></li>
-                                            <li><NavLink className="dropdown-item" to="#">Action</NavLink></li>
-                                        </ul>
-                                    </li>
+                                    {
+                                        categories.map(category =>
+                                            <li className="dropdown">
+                                                <NavLink to={`/collections${category.slug}`}
+                                                    id="dropdownMenuButton" data-toggle="dropdown"
+                                                    aria-haspopup="true" aria-expanded="false">
+                                                    {category.name}
+                                                </NavLink>
+                                                <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                    {
+                                                        category.children.map(child =>
+                                                            <li>
+                                                                <NavLink className="dropdown-item" to={`/collections${child.slug}`}>
+                                                                    {child.name}
+                                                                </NavLink>
+                                                            </li>)
+                                                    }
+                                                </ul>
+                                            </li>
+                                        )
+                                    }
                                 </ul>
                             </div>
                             {/* <!-- .navbar-collapse --> */}
@@ -233,8 +193,8 @@ export const Header = () => {
                     {/* <!-- .nav --> */}
                 </div>
                 {/* <!-- .navigation-section --> */}
-            </div>
+            </div >
             {/* <!-- .container --> */}
-        </section>
+        </section >
     )
 }

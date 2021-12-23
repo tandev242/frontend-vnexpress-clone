@@ -1,7 +1,9 @@
-import axios from "./axiosClient";
+import { axiosInstance, baseURL } from "./axiosClient";
 
-const authAPI = {
-    // login: (user) => axios.post("/account/login/", user),
-    // register: (user) => axios.post("/account/register/", user)
+
+const authApi = {
+
 };
-export default authAPI;
+
+export default authApi;
+

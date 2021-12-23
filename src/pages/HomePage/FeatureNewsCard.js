@@ -3,27 +3,19 @@ import { Link } from "react-router-dom";
 import moment from "moment";
 
 export const FeatureNewsCard = (props) => {
-  const { hot_news, trending_new, editor_choice } = props;
+  const { hotNews, trendingNews, editorChoice } = props;
   return (
     <>
       <div className="container">
         <div className="row">
-          {hot_news ? (
-            <div className="col-md-7" key={hot_news.id}>
+          {hotNews ? (
+            <div className="col-md-7" key={hotNews._id}>
               <div className="feature_article_wrapper">
                 <div className="feature_article_img">
                   <img
                     style={{ height: 568.45, width: 652.5 }}
                     className="img-responsive top_static_article_img"
-                    src={
-                      hot_news.thumbnail_url
-                        ? hot_news.thumbnail_url
-                        : hot_news.thumbnail.startsWith(
-                          "/media"
-                        )
-                          ? `http://localhost:8000${hot_news.thumbnail}`
-                          : `http://localhost:8000/media/${hot_news.thumbnail}`
-                    }
+                    src={hotNews.thumbnailUrl}
                     alt="feature-top"
                   />
                 </div>
@@ -35,15 +27,15 @@ export const FeatureNewsCard = (props) => {
                   </div>
                   <div className="feature_article_title">
                     <h1>
-                      <Link to={`/post/${hot_news.slug}`}>
-                        {hot_news.title}
+                      <Link to={`/${hotNews.slug}`}>
+                        {hotNews.title}
                       </Link>
                     </h1>
                   </div>
                   {/* <!-- feature_article_title --> */}
 
                   <div className="feature_article_content">
-                    {hot_news.description.substring(0, 90)}
+                    {hotNews.lead}
                     ...
                   </div>
                   {/* <!-- feature_article_content --> */}
@@ -55,8 +47,8 @@ export const FeatureNewsCard = (props) => {
           ) : (
             ""
           )}
-          {trending_new ? (
-            <div className="col-md-5" key={trending_new.id}>
+          {trendingNews ? (
+            <div className="col-md-5" key={trendingNews._id}>
               <div className="feature_static_wrapper">
                 <div className="feature_article_img">
                   <img
@@ -65,11 +57,7 @@ export const FeatureNewsCard = (props) => {
                       width: 457.5,
                     }}
                     className="img-responsive"
-                    src={
-                      trending_new.thumbnail_url
-                        ? trending_new.thumbnail_url
-                        : ""
-                    }
+                    src={trendingNews.thumbnailUrl}
                     alt="feature-top"
                   />
                 </div>
@@ -82,18 +70,15 @@ export const FeatureNewsCard = (props) => {
                   <div className="feature_article_title">
                     <h1>
                       <Link
-                        to={`/post/${trending_new.slug}`}
+                        to={`/${trendingNews.slug}`}
                       >
-                        {trending_new.title}
+                        {trendingNews.title}
                       </Link>
                     </h1>
                   </div>
                   {/* <!-- feature_article_title --> */}
                   <div className="feature_article_content">
-                    {trending_new.description.substring(
-                      0,
-                      90
-                    )}
+                    {trendingNews.lead}
                     ...
                   </div>
                   {/* <!-- feature_article_content --> */}
@@ -106,8 +91,8 @@ export const FeatureNewsCard = (props) => {
           ) : (
             ""
           )}
-          {editor_choice ? (
-            <div className="col-md-5" key={editor_choice.id}>
+          {editorChoice ? (
+            <div className="col-md-5" key={editorChoice._id}>
               <div className="feature_static_last_wrapper">
                 <div className="feature_article_img">
                   <img
@@ -116,15 +101,7 @@ export const FeatureNewsCard = (props) => {
                       width: 457.5,
                     }}
                     className="img-responsive"
-                    src={
-                      editor_choice.thumbnail_url
-                        ? editor_choice.thumbnail_url
-                        : editor_choice.thumbnail.startsWith(
-                          "/media"
-                        )
-                          ? `http://localhost:8000${editor_choice.thumbnail}`
-                          : `http://localhost:8000/media/${editor_choice.thumbnail}`
-                    }
+                    src={editorChoice.thumbnailUrl}
                     alt="feature-top"
                   />
                 </div>
@@ -138,18 +115,15 @@ export const FeatureNewsCard = (props) => {
                   <div className="feature_article_title">
                     <h1>
                       <Link
-                        to={`/post/${editor_choice.slug}`}
+                        to={`/${editorChoice.slug}`}
                       >
-                        {editor_choice.title}
+                        {editorChoice.title}
                       </Link>
                     </h1>
                   </div>
                   {/* <!-- feature_article_title --> */}
                   <div className="feature_article_content">
-                    {editor_choice.description.substring(
-                      0,
-                      90
-                    )}
+                    {editorChoice.lead}
                     ...
                   </div>
                   {/* <!-- feature_article_content --> */}

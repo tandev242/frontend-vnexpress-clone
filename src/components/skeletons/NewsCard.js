@@ -21,55 +21,38 @@ export const NewsCard = (props) => {
                                 width: 775,
                                 maxHeight: 450,
                             }}
-                            src={
-                                news.thumbnail_url
-                                    ? news.thumbnail_url
-                                    : news.thumbnail.startsWith("/media")
-                                    ? `http://localhost:8000${news.thumbnail}`
-                                    : `http://localhost:8000/media/${news.thumbnail}`
-                            }
+                            src={news.thumbnailUrl}
                             alt="feature-top"
                         />
                     </div>
 
                     <div class="entity_title">
-                        <Link to={`/post/${news.slug}`}>
+                        <Link to={`/${news.slug}`}>
                             <h3> {news.title} </h3>
                         </Link>
                     </div>
 
                     <div class="entity_meta">
                         <a href="#">
-                            {moment(news.timestamp).format("Do MMM  YYYY")}
+                            {moment(news.createdAt).format(
+                                "HH:mm [ngày] DD [tháng] MM"
+                            )}
                         </a>
                         , by:{" "}
                         <a href="#">
-                            {news.author.user
-                                ? news.author.user.username
-                                : news.author}
+                            Tan Tran
                         </a>
                     </div>
 
                     <div class="entity_content">
-                        {news.description.substring(0, 150)}...
-                    </div>
-
-                    <div class="entity_social">
-                        <span>
-                            <i class="fa fa-share-alt"></i>
-                            424 <a href="#">Shares</a>{" "}
-                        </span>
-                        <span>
-                            <i class="fa fa-comments-o"></i>
-                            {news.total_comment_count} <a href="#"> Comments</a>{" "}
-                        </span>
+                        {news.lead}
                     </div>
                 </div>
             ) : (
                 <div class="col-md-6">
                     <div
                         class="category_article_body"
-                        style={{ marginBottom: 20 }}
+                        style={{ marginBottom: 30 }}
                     >
                         <div class="top_article_img">
                             <img
@@ -78,20 +61,14 @@ export const NewsCard = (props) => {
                                     width: 360,
                                     height: 250,
                                 }}
-                                src={
-                                    news.thumbnail_url
-                                        ? news.thumbnail_url
-                                        : news.thumbnail.startsWith("/media")
-                                        ? `http://localhost:8000${news.thumbnail}`
-                                        : `http://localhost:8000/media/${news.thumbnail}`
-                                }
+                                src={news.thumbnailUrl}
                                 alt="feature-top"
                             />
                         </div>
 
                         <div class="category_article_title">
                             <h5>
-                                <Link to={`/post/${news.slug}`}>
+                                <Link to={`/${news.slug}`}>
                                     {news.title}{" "}
                                 </Link>
                             </h5>
@@ -99,34 +76,17 @@ export const NewsCard = (props) => {
 
                         <div class="article_date">
                             <a href="#">
-                                {moment(news.timestamp).format("Do MMM  YYYY")}
+                                {moment(news.createdAt).format("Do MMM  YYYY")}
                             </a>
                             , by:{" "}
                             <a href="#">
                                 {" "}
-                                {news.author.user
-                                    ? news.author.user.username
-                                    : news.author}
+                                Tan Tran
                             </a>
                         </div>
 
                         <div class="category_article_content">
-                            {news.description.substring(0, 150)}...
-                        </div>
-
-                        <div class="article_social">
-                            <span>
-                                <a href="#">
-                                    <i class="fa fa-share-alt"></i>
-                                    424{" "}
-                                </a>{" "}
-                                Shares
-                            </span>
-                            <span>
-                                <i class="fa fa-comments-o"></i>
-                                <a href="#"> {news.total_comment_count}</a>{" "}
-                                Comments
-                            </span>
+                            {news.lead}
                         </div>
                     </div>
                 </div>

@@ -5,22 +5,20 @@ import { MoreNewsSkeleton } from "../../components/skeletons/MoreNewsButtonSkele
 
 import moment from "moment";
 
-export const NewscardTwo = (props) => {
-    const { newslist } = props;
-    // console.log(props);
-
+export const NewsCardTwo = (props) => {
+    const { newsList } = props;
     return (
         <>
-            {newslist.map((news, index) => {
+            {newsList.map((news, index) => {
                 return (
                     <div key={index}>
                         {index === 0 ? (
                             <div className="article_title header_blue">
                                 <h2>
                                     <Link
-                                        to={`/category/${news.category.slug}`}
+                                        to={`/${news.categoryId.slug}`}
                                     >
-                                        {news.category.name}
+                                        {news.categoryId.name}
                                     </Link>
                                 </h2>
                             </div>
@@ -31,35 +29,23 @@ export const NewscardTwo = (props) => {
                             <div className="row">
                                 <div className="col-md-5">
                                     <div className="top_article_img">
-                                        <Link to={`/post/${news.slug}`}>
+                                        <Link to={`/${news.slug}`}>
                                             <img
                                                 style={{
                                                     width: 295,
                                                     height: 252,
                                                 }}
                                                 className="img-responsive"
-                                                src={
-                                                    news.thumbnail_url
-                                                        ? news.thumbnail_url
-                                                        : news.thumbnail.startsWith(
-                                                              "/media"
-                                                          )
-                                                        ? `http://localhost:8000${news.thumbnail}`
-                                                        : `http://localhost:8000/media/${news.thumbnail}`
-                                                }
+                                                src={news.thumbnailUrl}
                                                 alt="feature-top"
                                             />
                                         </Link>
                                     </div>
                                 </div>
                                 <div className="col-md-7">
-                                    <TagItemSkeleton
-                                        tag={news.tags}
-                                        css={"tag orange"}
-                                    />
                                     <div className="category_article_title">
                                         <h2>
-                                            <Link to={`/post/${news.slug}`}>
+                                            <Link to={`/${news.slug}`}>
                                                 {news.title}
                                             </Link>
                                         </h2>
@@ -67,43 +53,22 @@ export const NewscardTwo = (props) => {
 
                                     <div className="article_date">
                                         <a href="#">
-                                            {moment(news.timestamp).format(
-                                                "Do MMM  YYYY"
+                                            {moment(news.createdAt).format(
+                                                "HH:mm [ngày] DD [tháng] MM"
                                             )}
-                                        </a>
-                                        , by:
-                                        <a href="#">
-                                            {news.author.user.username}
                                         </a>
                                     </div>
 
                                     <div className="category_article_content">
-                                        {news.description.substring(0, 90)}...
-                                    </div>
-
-                                    <div className="media_social">
-                                        <span>
-                                            <a href="#">
-                                                <i className="fa fa-share-alt"></i>
-                                                424
-                                            </a>
-                                            Shares
-                                        </span>
-                                        <span>
-                                            <i className="fa fa-comments-o"></i>
-                                            <a href="#">
-                                                {news.total_comment_count}
-                                            </a>
-                                            Comments
-                                        </span>
+                                        {news.lead}
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <MoreNewsSkeleton
-                            news={newslist}
+                            news={newsList}
                             index={index}
-                            slug={news.category.slug}
+                            slug={news.categoryId.slug}
                         />
                     </div>
                 );

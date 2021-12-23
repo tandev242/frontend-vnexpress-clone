@@ -3,24 +3,24 @@ import authApi from "../apis/authApi";
 import { createBrowserHistory } from "history";
 const history = createBrowserHistory();
 
-export const loginUser = createAsyncThunk("auth/login", async (user) => {
+export const login = createAsyncThunk("auth/login", async (user) => {
     const response = await authApi.login(user);
     return response;
 });
 
-export const registerUser = createAsyncThunk("auth/register", async (user) => {
+export const register = createAsyncThunk("auth/register", async (user) => {
     const response = await authApi.register(user);
     return response;
 });
 
-export const logoutUser = createAsyncThunk("auth/logout", async () => {
+export const logout = createAsyncThunk("auth/logout", async () => {
     const response = await authApi.register();
     return response;
 });
 
 const initialState = {
-    isLoading: false,
-    isAuthenticated: false,
+    loading: false,
+    authenticated: false,
     user: {},
     error: null,
 };
@@ -29,30 +29,30 @@ export const authSlice = createSlice({
     name: "auth",
     initialState,
     extraReducers: {
-        [loginUser.pending]: (state) => {
-            state.isLoading = true;
+        [login.pending]: (state) => {
+            state.loading = true;
         },
-        [loginUser.rejected]: (state, action) => {
-            state.isLoading = false;
-            state.isAuthenticated = false;
+        [login.rejected]: (state, action) => {
+            state.loading = false;
+            state.authenticated = false;
             state.error = action.error;
         },
-        [loginUser.fulfilled]: (state, action) => {
-            state.isLoading = false;
-            state.isAuthenticated = true;
+        [login.fulfilled]: (state, action) => {
+            state.loading = false;
+            state.authenticated = true;
             state.user = action.payload.data.user;
             localStorage.setItem("token", state.token);
         },
-        [registerUser.pending]: (state) => {
-            state.isLoading = true;
+        [register.pending]: (state) => {
+            state.loading = true;
         },
-        [registerUser.rejected]: (state, action) => {
-            state.isLoading = false;
+        [register.rejected]: (state, action) => {
+            state.loading = false;
             state.error = action.error;
         },
-        [registerUser.fulfilled]: (state, action) => {
-            state.isLoading = false;
-            state.isAuthenticated = true;
+        [register.fulfilled]: (state, action) => {
+            state.loading = false;
+            state.authenticated = true;
             state.user = action.payload.data.user;
             localStorage.setItem("token", state.token);
         }
