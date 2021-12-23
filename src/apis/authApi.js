@@ -1,9 +1,9 @@
-import { axiosInstance, baseURL } from "./axiosClient";
-
+import { axiosInstance, baseURL } from './axiosClient'
 
 const authApi = {
+  getCurrentUser: () =>
+    axiosInstance.get(`${baseURL.query}/user/getCurrentUser`),
+  login: () => axiosInstance.post(`${baseURL.user}/`),
+}
 
-};
-
-export default authApi;
-
+export default authApi
