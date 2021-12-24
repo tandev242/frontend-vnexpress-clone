@@ -8,6 +8,7 @@ import { CommentForm } from "../components/includes/CommentForm";
 import { Link, useRouteMatch } from "react-router-dom";
 import { getPostBySlug } from "../slices/postSlice";
 import { useDispatch } from "react-redux"
+import Popover from "../components/includes/Popover";
 
 export default function NewsDetailPage() {
     const dispatch = useDispatch();
@@ -16,6 +17,9 @@ export default function NewsDetailPage() {
     const [post, setPost] = useState({});
     const [postComments, setPostComments] = useState([]);
     const [topicComments, setTopicComments] = useState([]);
+    const [show, setShow] = useState(false)
+    const [position, setPosition] = useState({})
+
 
     const { authenticated } = useSelector(state => state.auth);
     useEffect(() => {
@@ -26,6 +30,7 @@ export default function NewsDetailPage() {
             setTopicComments(res.data.topicComments);
         }
         fetchPostBySlug();
+        window.scrollTo(0, 0);
     }, [slug])
 
     if (Object.keys(post).length === 0) {
@@ -39,7 +44,7 @@ export default function NewsDetailPage() {
                     {post && (
                         <div className="col-md-8">
                             <div className="entity_wrapper">
-                                <SingleNewsCard news={post} />
+                                <SingleNewsCard news={post} setShow={setShow} setPosition={setPosition} />
                                 {/* entity_content */}
                                 <div className="entity_footer">
                                     {/* entity_tag */}
@@ -91,6 +96,7 @@ export default function NewsDetailPage() {
                 </div>
             </div>
             {/* container */}
+            <Popover top={position.top} left={position.left} show={show} />
         </section >
     );
 }

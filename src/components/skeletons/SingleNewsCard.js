@@ -1,7 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import moment from "moment";
+
 export const SingleNewsCard = (props) => {
-    const { news } = props;
+    const { news, setPosition, setShow } = props;
+
+    const handleSelectedText = (e) => {
+        const selectedText = window.getSelection();
+        const left = e.clientX;
+        const top = e.clientY + e.screenX;
+        if (selectedText.toString().trim()) {
+
+            setShow(true);
+            setPosition({ top, left });
+        }else{
+            setShow(false);
+        }
+    }
+
     return (
         <>
             <div className="entity_title">
@@ -24,6 +39,7 @@ export const SingleNewsCard = (props) => {
             <div className="entity_content">
                 <section
                     className="not-found-controller"
+                    onMouseUp={handleSelectedText}
                     dangerouslySetInnerHTML={{ __html: news.content }}
                 />
             </div>
