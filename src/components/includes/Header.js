@@ -1,21 +1,18 @@
-import React, { useEffect, Fragment } from 'react'
-import { NavLink, Link } from 'react-router-dom'
+import React, { Fragment } from 'react'
+import { NavLink, Link, useHistory } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import { useHistory } from 'react-router-dom'
-import { toast } from 'react-toastify'
 import moment from 'moment'
 import LOGO from '../../assets/images/logo-vnexpress.png'
-import { getCurrentUser } from '../../slices/authSlice'
-import { unwrapResult } from '@reduxjs/toolkit'
 import { authAction } from '../../slices/authSlice'
 
 export const Header = () => {
   const { categories } = useSelector((state) => state.post)
   const { user, authenticated } = useSelector((state) => state.auth)
   const dispatch = useDispatch()
-
+  const history = useHistory()
   const HandleLogout = () => {
     dispatch(authAction.logout())
+    history.push('/')
   }
 
   return (
@@ -101,6 +98,12 @@ export const Header = () => {
                           >
                             Logout
                           </li>
+                          {user.role === 'admin' && (
+                            <Link to="/registerAdmin">
+                              {' '}
+                              register for Admin{' '}
+                            </Link>
+                          )}
                         </ul>
                       </li>
                     </Fragment>

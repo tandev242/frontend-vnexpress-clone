@@ -1,45 +1,38 @@
-import React, { useState, useEffect, Fragment } from 'react'
+import React, { useState, Fragment } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { Link } from 'react-router-dom'
-import { useHistory } from 'react-router-dom'
-import { Loading } from '../components/includes/Loading'
-import { ToastContainer, toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
-import { login, authAction } from '../slices/authSlice'
+import { authAction, forgotPassword, resetPassword } from '../slices/authSlice'
 import Modal from '../components/includes/Modal'
+import { ToastContainer, toast } from 'react-toastify'
+import { unwrapResult } from '@reduxjs/toolkit'
+import { useParams, useHistory } from 'react-router-dom'
 
-export default function LoginPage() {
-  const [userData, setUser] = useState({
-    email: '',
-    password: '',
+export default function ResetPassword() {
+  const [formState, setFormState] = useState({
+    newPassword: '',
+    confirmPassword: '',
   })
-
+  const { loading: isLoading, error } = useSelector((state) => state.auth)
   const history = useHistory()
+  const token = useParams().token
   const dispatch = useDispatch()
-  const {
-    loading: isLoading,
-    error,
-    authenticated,
-  } = useSelector((state) => state.auth)
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    await dispatch(login(userData))
+  const onChange = (e) => {
+    setFormState((prev) => {
+      return { ...prev, [e.target.name]: e.target.value }
+    })
   }
-  
+
   const closeErrorHandler = () => {
     dispatch(authAction.closeError())
   }
 
-  const onChange = (e) => {
-    setUser({ ...userData, [e.target.name]: e.target.value })
-  }
-
-  if (authenticated) {
-    history.push('/')
-  }
-  if (isLoading === true) {
-    return <Loading />
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    const res = await dispatch(resetPassword({ password: formState, token }))
+    const resData = unwrapResult(res)
+    if (resData.data.success) {
+      history.push('/login')
+    }
   }
   return (
     <section id="subscribe_section" className="subscribe_section">
@@ -66,30 +59,29 @@ export default function LoginPage() {
             <form onSubmit={handleSubmit}>
               <div className="form-group comment">
                 <div className="form-group">
-                  <label>Email</label>
-                  <input
-                    onChange={onChange}
-                    type="text"
-                    name="email"
-                    className="form-control"
-                    placeholder="email"
-                    value={userData.email}
-                    required
-                  />
-                </div>
-                <div className="form-group">
                   <label>Password</label>
                   <input
                     onChange={onChange}
                     type="password"
-                    name="password"
+                    name="newPassword"
                     className="form-control"
-                    placeholder="Password"
-                    value={userData.password}
+                    placeholder="enter new password"
+                    value={formState.password}
                     required
                   />
                 </div>
-
+                <div className="form-group">
+                  <label>confirm Password</label>
+                  <input
+                    onChange={onChange}
+                    type="password"
+                    name="confirmPassword"
+                    className="form-control"
+                    placeholder="confirm password"
+                    value={formState.confirmPassword}
+                    required
+                  />
+                </div>
                 <button
                   type="submit"
                   className="btn btn-primary btn-flat m-b-30 m-t-30"
@@ -99,22 +91,9 @@ export default function LoginPage() {
                       <i className="fa fa-spinner fa-spin" /> Loading
                     </Fragment>
                   ) : (
-                    'Login'
+                    'Change Password'
                   )}
                 </button>
-                <div className="register-link m-t-15 text-center">
-                  <p>
-                    Did Not have account ? <Link to="/register">Sign In</Link>
-                  </p>
-                </div>
-                <div className="m-t-15 text-center">
-                  <p>or</p>
-                </div>
-                <div className="register-link m-t-15 text-center">
-                  <p>
-                    <Link to="/forgotPassword">Forgot password ?</Link>
-                  </p>
-                </div>
               </div>
             </form>
           </div>
