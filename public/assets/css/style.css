@@ -1116,7 +1116,6 @@ section {
     left: 180px;
 }
 .entity_vote {
-    padding: 10px 0 0;
     text-align: right;
 }
 
@@ -1362,7 +1361,25 @@ section {
 
 .widget .media {
     margin-top: 0;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
+}
+
+.widget .media.comment{
+    padding: 5px;
+    border: 1px solid rgb(185, 177, 177);
+    background-color: #F8F9FA;
+    border-radius: 10px;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.widget .media.sub-comment {
+    padding: 5px;
+    border: 1px solid rgb(185, 177, 177);
+    background-color: rgb(255, 255, 255);
+    border-radius: 5px;
+    margin-top: 0;
+    margin-bottom: 2px;
 }
 
 .widget .media-heading {
@@ -1782,9 +1799,19 @@ section {
     text-align: center;
 }
 
-
-figcaption{
+figcaption {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.media-object.comment{
+    border-radius: 50%;
+    height: 30px;
+    width: 30px;
+    object-fit: cover;
+}
+
+.entity_comment_from{
+    margin-bottom:10px;
 }

@@ -1,35 +1,86 @@
 import React, { Fragment } from "react";
-
+import NoAvatar from "../../assets/images/user-icon.png"
 export const Comments = (props) => {
-    const { comments } = props;
+    // const { comments } = props;
+    const comments = [
+        {
+            _id: "213213",
+            userId: {
+                name: "Tan Nguyen"
+            },
+            content: "hahahahahahahha",
+            subComments: [{
+                content: "hahaaha",
+                _id: "213213",
+                userId: {
+                    name: "Tan Nguyen",
+                }
+            }, {
+                content: "hahaaha",
+                _id: "213213",
+                userId: {
+                    name: "Tan Nguyen",
+                }
+            }]
+        }, {
+            _id: "213213",
+            userId: {
+                name: "Tan Nguyen"
+            },
+            content: "hahahahahahahha",
+            subComments: [{
+                content: "hahaaha",
+                _id: "213213",
+                userId: {
+                    name: "Tan Nguyen",
+
+                }
+            }]
+        }, {
+            _id: "213213",
+            userId: {
+                name: "Tan Nguyen"
+            },
+            content: "hahahahahahahha",
+            subComments: [{
+                content: "hahaaha",
+                _id: "213213",
+                userId: {
+                    name: "Tan Nguyen",
+
+                }
+            }]
+        }, {
+            _id: "213213",
+            userId: {
+                name: "Tan Nguyen"
+            },
+            content: "hahahahahahahha",
+            subComments: []
+        }
+    ]
+
     return (
         <Fragment>
             {comments &&
                 comments.map((comment) => {
                     return (
-                        <div className="media">
+                        <div className="media comment">
                             <div className="media-left">
                                 <a href="#">
-                                    <div
-                                        data-initials={
-                                            comment.user &&
-                                            comment.user.username.substring(0, 2).toUpperCase()
-                                        }
-                                    ></div>
-                                    {/* <img
+                                    <img
                                         alt="64x64"
-                                        className="media-object"
-                                        data-src="assets/img/reader_img3.jpg"
-                                        src="assets/img/reader_img3.jpg"
+                                        className="media-object comment"
+                                        src={comment.userId.avatar ? comment.userId.avatar : NoAvatar}
                                         data-holder-rendered="true"
-                                    /> */}
+                                    />
                                 </a>
                             </div>
                             <div className="media-body">
                                 <h2 className="media-heading">
-                                    <a href="#">{comment.user && comment.user.username}</a>
+                                    <a href="#">{comment.userId && comment.userId.name}</a>
                                 </h2>
-                                {comment.comment}
+                                {comment.content}
                                 <div className="entity_vote">
                                     <a href="#">
                                         <i className="fa fa-thumbs-o-up" aria-hidden="true" />
@@ -38,45 +89,28 @@ export const Comments = (props) => {
                                         <i className="fa fa-thumbs-o-down" aria-hidden="true" />
                                     </a>
                                     <a href="#">
-                                        <span className="reply_ic">Reply </span>
+                                        <span className="reply_ic">Phản hồi </span>
                                     </a>
                                 </div>
-                                {comment.replies &&
-                                    comment.replies.map((reply) => {
+                                {comment.subComments &&
+                                    comment.subComments.map((reply) => {
                                         return (
-                                            <div className="media" key={reply.id}>
+                                            <div className="media sub-comment" key={reply._id}>
                                                 <div className="media-left">
                                                     <a href="#">
-                                                        {/* <img
+                                                        <img
                                                             alt="64x64"
-                                                            className="media-object"
-                                                            data-src="/static/assets/img/reader_img2.jpg"
-                                                            src="/static/assets/img/reader_img2.jpg"
+                                                            className="media-object comment"
+                                                            src={reply.userId.avatar ? reply.userId.avatar : NoAvatar}
                                                             data-holder-rendered="true"
-                                                        /> */}
-                                                        <i class="fa fa-user"></i>
+                                                        />
                                                     </a>
                                                 </div>
                                                 <div className="media-body">
-                                                    <h2 className="media-heading">
-                                                        <a href="#">{reply.user.username}</a>
-                                                    </h2>
-
-                                                    <div className="entity_vote">
-                                                        <a href="#">
-                                                            <i
-                                                                className="fa fa-thumbs-o-up"
-                                                                aria-hidden="true"
-                                                            />
-                                                        </a>
-                                                        <a href="#">
-                                                            <i
-                                                                className="fa fa-thumbs-o-down"
-                                                                aria-hidden="true"
-                                                            />
-                                                        </a>
-                                                        <span className="reply_ic">Reply </span>
-                                                    </div>
+                                                    <h3 className="media-heading">
+                                                        <a href="#">{reply.userId.name}</a>
+                                                    </h3>
+                                                    {comment.content}
                                                 </div>
                                             </div>
                                         );

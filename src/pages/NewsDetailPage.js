@@ -8,7 +8,6 @@ import { CommentForm } from "../components/includes/CommentForm";
 import { Link, useRouteMatch } from "react-router-dom";
 import { getPostBySlug } from "../slices/postSlice";
 import { useDispatch } from "react-redux"
-import Popover from "../components/includes/Popover";
 
 export default function NewsDetailPage() {
     const dispatch = useDispatch();
@@ -17,9 +16,9 @@ export default function NewsDetailPage() {
     const [post, setPost] = useState({});
     const [postComments, setPostComments] = useState([]);
     const [topicComments, setTopicComments] = useState([]);
-    const [show, setShow] = useState(false)
-    const [position, setPosition] = useState({})
-
+    const [showTopic, setShowTopic] = useState(true);
+    const [showAddTopic, setShowAddTopic] = useState(false);
+    const [content, setContent] = useState("");
 
     const { authenticated } = useSelector(state => state.auth);
     useEffect(() => {
@@ -33,8 +32,20 @@ export default function NewsDetailPage() {
         window.scrollTo(0, 0);
     }, [slug])
 
+    useEffect(() => {
+        setShowTopic(true);
+    },[showAddTopic])
+
     if (Object.keys(post).length === 0) {
         return <Loading />;
+    }
+
+    const handleSubmitAddPostComment = (e) => {
+        e.preventDefault();
+    }
+
+    const handleSubmitAddTopicComment = (e) => {
+        e.preventDefault();
     }
 
     return (
@@ -44,7 +55,7 @@ export default function NewsDetailPage() {
                     {post && (
                         <div className="col-md-8">
                             <div className="entity_wrapper">
-                                <SingleNewsCard news={post} setShow={setShow} setPosition={setPosition} />
+                                <SingleNewsCard news={post} setShowAddTopic={setShowAddTopic} />
                                 {/* entity_content */}
                                 <div className="entity_footer">
                                     {/* entity_tag */}
@@ -70,8 +81,7 @@ export default function NewsDetailPage() {
                                 </div>
                                 {authenticated ? (
                                     <CommentForm
-                                        news={post._id}
-                                        slug={slug}
+                                        handleSubmit={handleSubmitAddPostComment}
                                     />) : <p>
                                     Để bình luận về bài viết vui lòng <Link to="/login">Đăng nhập</Link>
                                 </p>}
@@ -91,12 +101,41 @@ export default function NewsDetailPage() {
                             </div>
                         </div>
                     )}
-                    <Sidebar />
+                    {
+                        showTopic ?
+                            <Fragment>
+                                <div className="col-md-4">
+                                    <div className="widget">
+                                        <div className="widget_title widget_black">
+                                            <h2>
+                                                <a href="#">Thảo luận </a>
+                                                <a style={{ fontSize: "15px", color: "gray" }}
+                                                    onClick={() => setShowTopic(false)}>
+                                                    Ẩn
+                                                </a>
+                                            </h2>
+                                        </div>
+                                        {showAddTopic && <CommentForm />}
+                                        {
+                                            topicComments.length == 0 ?
+                                                <Comments comments={topicComments} />
+                                                : <h3>Hiện tại chưa có bất kì bàn luận nào về chủ đề </h3>
+                                        }
+
+                                        {/* <p className="widget_divider">
+                                            <a href="#" target="_self">
+                                                Xem thêm&nbsp;&raquo;
+                                            </a>
+                                        </p> */}
+                                    </div>
+                                </div>
+                            </Fragment> :
+                            <Sidebar />
+                    }
                     {/*Right Section*/}
                 </div>
             </div>
             {/* container */}
-            <Popover top={position.top} left={position.left} show={show} />
         </section >
     );
 }

@@ -1,30 +1,12 @@
-import React, { useState, useEffect, Fragment } from "react";
-import { useDispatch, useSelector } from "react-redux";
-// import { createtNewsComment} from "../../redux/actions/NewsComment";
-// import { Loading } from "./Loading";
-// import { LOADING_REQUEST } from "../../redux/actions/actionTypes";
-// import { Comments } from "./Comments";
-// import { toast } from "react-toastify";
+import React, { Fragment } from "react";
 
 export const CommentForm = (props) => {
-    const { news } = props;
-    const [data, setData] = useState({
-        post: "",
-        comment: "",
-    });
-    // const {isCreated} = useSelector(state => state.newCommentReducer)
-    // console.log(isCreated);
-    const dispatch = useDispatch();
+    const { handleSubmit, content, setContent } = props;
 
     const onChangeComment = (e) => {
-        setData({ post: news, comment: e.target.value });
+        setContent(e.target.value);
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        // dispatch(createtNewsComment(data));
-        setData({ post: "", comment: "" });
-    };
     return (
         <Fragment>
             {/*Entity Title */}
@@ -37,7 +19,7 @@ export const CommentForm = (props) => {
                             id="comment"
                             name="comment"
                             placeholder="Comment"
-                            value={data.comment}
+                            value={content}
                             required
                         />
                     </div>
