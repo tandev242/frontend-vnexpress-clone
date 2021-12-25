@@ -1116,8 +1116,7 @@ section {
   left: 180px;
 }
 .entity_vote {
-  padding: 10px 0 0;
-  text-align: right;
+    text-align: right;
 }
 
 .entity_vote i {
@@ -1361,8 +1360,26 @@ section {
 }
 
 .widget .media {
-  margin-top: 0;
-  margin-bottom: 30px;
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+.widget .media.comment{
+    padding: 5px;
+    border: 1px solid rgb(185, 177, 177);
+    background-color: #F8F9FA;
+    border-radius: 10px;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.widget .media.sub-comment {
+    padding: 5px;
+    border: 1px solid rgb(185, 177, 177);
+    background-color: rgb(255, 255, 255);
+    border-radius: 5px;
+    margin-top: 0;
+    margin-bottom: 2px;
 }
 
 .widget .media-heading {
@@ -1834,4 +1851,33 @@ figcaption {
 }
 .right-btn {
   text-align: right;
+}
+figcaption {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.media-object.comment{
+    border-radius: 50%;
+    height: 30px;
+    width: 30px;
+    object-fit: cover;
+}
+
+.entity_comment_from{
+    margin-bottom:10px;
+}
+.media-wrapper{
+    padding: 10px;
+    background-color: #F0F6FD;
+    border: 1px solid rgb(135, 180, 231);
+    border-radius: 5px;
+    margin: 5px 0;
+}
+.input.comment{
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    width: 100%;
+    margin-right: 5px;
 }

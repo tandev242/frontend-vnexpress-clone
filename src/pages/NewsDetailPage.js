@@ -10,88 +10,118 @@ import { getPostBySlug } from '../slices/postSlice'
 import { useDispatch } from 'react-redux'
 
 export default function NewsDetailPage() {
-  const dispatch = useDispatch()
-  let match = useRouteMatch()
-  const { slug } = match.params
-  const [post, setPost] = useState({})
-  const [postComments, setPostComments] = useState([])
-  const [topicComments, setTopicComments] = useState([])
+    const dispatch = useDispatch()
+    let match = useRouteMatch()
+    const { slug } = match.params
+    const [post, setPost] = useState({})
+    const [postComments, setPostComments] = useState([])
+    const [topicComments, setTopicComments] = useState([])
+    const [showAddTopic, setShowAddTopic] = useState(false)
+    const [content, setContent] = useState("")
 
-  const { authenticated } = useSelector((state) => state.auth)
-  useEffect(() => {
-    const fetchPostBySlug = async () => {
-      const res = await dispatch(getPostBySlug(slug)).unwrap()
-      setPost(res.data.post)
-      setPostComments(res.data.postComments)
-      setTopicComments(res.data.topicComments)
+    const { authenticated } = useSelector(state => state.auth)
+    useEffect(() => {
+        const fetchPostBySlug = async () => {
+            const res = await dispatch(getPostBySlug(slug)).unwrap()
+            setPost(res.data.post)
+            setPostComments(res.data.postComments)
+            setTopicComments(res.data.topicComments)
+        }
+        fetchPostBySlug()
+        window.scrollTo(0, 0)
+    }, [slug])
+
+    if (Object.keys(post).length === 0) {
+        return <Loading />
     }
-    fetchPostBySlug()
-  }, [slug])
 
-  if (Object.keys(post).length === 0) {
-    return <Loading />
-  }
+    const handleSubmitAddPostComment = (e) => {
+        e.preventDefault()
+    }
 
-  return (
-    <section id="entity_section" className="entity_section">
-      <div className="container">
-        <div className="row">
-          {post && (
-            <div className="col-md-8">
-              <div className="entity_wrapper">
-                <SingleNewsCard news={post} />
-                {/* entity_content */}
-                <div className="entity_footer">
-                  {/* entity_tag */}
-                  <div className="entity_social">
-                    <span>
-                      <i className="fa fa-share-alt" />
-                      {topicComments.length} <a href="#">Bàn luận về chủ đề</a>
-                    </span>
-                    <span>
-                      <i className="fa fa-comments-o" />
-                      {postComments.length}
-                      <a href="#"> Bàn luận về bài viết</a>
-                    </span>
-                  </div>
-                  {/* entity_social */}
+    const handleSubmitAddTopicComment = (e) => {
+        e.preventDefault()
+    }
+
+    return (
+        <section id="entity_section" className="entity_section">
+            <div className="container">
+                <div className="row">
+                    {post && (
+                        <div className="col-md-8">
+                            <div className="entity_wrapper">
+                                <SingleNewsCard news={post} setShowAddTopic={setShowAddTopic} />
+                                {/* entity_content */}
+                                <div className="entity_footer">
+                                    {/* entity_tag */}
+                                    <div className="entity_social">
+                                        <span>
+                                            <i className="fa fa-share-alt" />
+                                            {topicComments.length} <a href="#">Bàn luận về chủ đề</a>
+                                        </span>
+                                        <span>
+                                            <i className="fa fa-comments-o" />
+                                            {postComments.length}
+                                            <a href="#">{" "}Bàn luận về bài viết</a>
+                                        </span>
+                                    </div>
+                                    {/* entity_social */}
+                                </div>
+                                {/* entity_footer */}
+                            </div>
+
+                            <div className="entity_comments">
+                                <div className="entity_inner__title header_black">
+                                    <h2>Thêm bình luận</h2>
+                                </div>
+                                {authenticated ? (
+                                    <CommentForm
+                                        handleSubmit={handleSubmitAddPostComment}
+                                    />) : <p>
+                                    Để bình luận về bài viết vui lòng <Link to="/login">Đăng nhập</Link>
+                                </p>}
+                            </div>
+                            <div className="readers_comment">
+                                {/* entity_title */}
+                                {post ? (
+                                    <Fragment>
+                                        <div className="entity_inner__title header_purple">
+                                            <h2>Bình luận [{postComments.length}]</h2>
+                                        </div>
+                                        <Comments comments={postComments} />
+                                    </Fragment>
+                                ) : (
+                                    ""
+                                )}
+                            </div>
+                        </div>
+                    )}
+                    <Fragment>
+                        <div className="col-md-4">
+                            <div className="widget">
+                                <div className="widget_title widget_black">
+                                    <h2>
+                                        <a href="#">Thảo luận </a>
+                                    </h2>
+                                </div>
+                                {showAddTopic && <CommentForm />}
+                                {
+                                    topicComments.length == 0 ?
+                                        <Comments comments={topicComments} />
+                                        : <h3>Hiện tại chưa có bất kì bàn luận nào về chủ đề </h3>
+                                }
+
+                                {/* <p className="widget_divider">
+                                            <a href="#" target="_self">
+                                                Xem thêm&nbsp&raquo
+                                            </a>
+                                        </p> */}
+                            </div>
+                        </div>
+                    </Fragment>
+                    {/*Right Section*/}
                 </div>
-                {/* entity_footer */}
-              </div>
-
-              <div className="entity_comments">
-                <div className="entity_inner__title header_black">
-                  <h2>Thêm bình luận</h2>
-                </div>
-                {authenticated ? (
-                  <CommentForm news={post._id} slug={slug} />
-                ) : (
-                  <p>
-                    Để bình luận về bài viết vui lòng{' '}
-                    <Link to="/login">Đăng nhập</Link>
-                  </p>
-                )}
-              </div>
-              <div className="readers_comment">
-                {/* entity_title */}
-                {post ? (
-                  <Fragment>
-                    <div className="entity_inner__title header_purple">
-                      <h2>Bình luận [{postComments.length}]</h2>
-                    </div>
-                    <Comments comments={postComments} />
-                  </Fragment>
-                ) : (
-                  ''
-                )}
-              </div>
             </div>
-          )}
-          <Sidebar />
-          {/*Right Section*/}
-        </div>
-      </div>
-      {/* container */}
-    </section>
-  )
+        </section >
+    )
 }

@@ -26,7 +26,7 @@ export default function LoginPage() {
     e.preventDefault()
     await dispatch(login(userData))
   }
-  
+
   const closeErrorHandler = () => {
     dispatch(authAction.closeError())
   }

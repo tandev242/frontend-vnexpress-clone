@@ -24,6 +24,7 @@ export default function CollectionsPage() {
       setCategory(res.data.category)
     }
     fetchPostsBySlug()
+    window.scrollTo(0, 0)
   }, [slug, subSlug])
 
   if (posts.length == 0) {
@@ -62,7 +63,7 @@ export default function CollectionsPage() {
           <Sidebar />
         </div>
       </div>
-      ;
+
     </Fragment>
   )
 }

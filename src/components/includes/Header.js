@@ -93,10 +93,11 @@ export const Header = () => {
                         </li>
                         <ul className="dropdown-menu">
                           <li
+                            className="btn logout"
                             onClick={HandleLogout}
-                            style={{ cursor: 'pointer' }}
+                            style={{ cursor: 'pointer', padding: "5px 25px", color: "#A0224F" }}
                           >
-                            Logout
+                            Log out
                           </li>
                           {user.role === 'admin' && (
                             <Link to="/registerAdmin">

@@ -13,7 +13,7 @@ export const FeatureNewsCard = (props) => {
               <div className="feature_article_wrapper">
                 <div className="feature_article_img">
                   <img
-                    style={{ height: 568.45, width: 652.5 }}
+                    style={{ height: 568.45, width: 652.5, objectFit: "cover" }}
                     className="img-responsive top_static_article_img"
                     src={hotNews.thumbnailUrl}
                     alt="feature-top"
@@ -55,6 +55,7 @@ export const FeatureNewsCard = (props) => {
                     style={{
                       height: 269.717,
                       width: 457.5,
+                      objectFit: "cover"
                     }}
                     className="img-responsive"
                     src={trendingNews.thumbnailUrl}
@@ -99,6 +100,7 @@ export const FeatureNewsCard = (props) => {
                     style={{
                       height: 269.717,
                       width: 457.5,
+                      objectFit: "cover"
                     }}
                     className="img-responsive"
                     src={editorChoice.thumbnailUrl}
