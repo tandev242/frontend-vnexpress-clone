@@ -48,33 +48,16 @@ const colors = [
     "#9799BA",
 ]
 
-const getHighLight = () => {
-    document.designMode = "on"
-    var selArr = [{
-        "startKey": "155",
-        "startTextIndex": 0,
-        "endKey": "155",
-        "endTextIndex": 0,
-        "startOffset": 24,
-        "endOffset": 323,
-        "color": "#9799BA"
-    }]
-    var sel = getSelection()
-    selArr.forEach(function (each) {
-        console.log(objToRange(each))
-        sel.removeAllRanges()
-        sel.addRange(objToRange(each))
-        document.execCommand("hiliteColor", false, each.color)
-    })
-    document.designMode = "off"
-}
+
 
 
 export const SingleNewsCard = (props) => {
     const { news, setShowAddTopic } = props
     const [position, setPosition] = useState({})
     const [showPopup, setShowPopup] = useState(false)
-    const [selectedArray, setSelectedArray] = useState([])
+    const [selectedArray, setSelectedArray] = useState([
+    ])
+    const [lastIndex, setLastIndex] = useState(0);
 
     useEffect(() => {
         const addKey = (element) => {
@@ -89,6 +72,8 @@ export const SingleNewsCard = (props) => {
     }, [])
 
 
+
+
     const handleSelectedText = (e) => {
         const selectedText = window.getSelection()
         var element = document.getElementById("post-details")
@@ -99,9 +84,7 @@ export const SingleNewsCard = (props) => {
         const top = e.pageY - clientY - document.documentElement.scrollTop + 80
         // -----------------
         let range
-        if (document.selection) {
-            range = document.selection.createRange();
-        } else if (selectedText.toString().trim() != "") {
+        if (selectedText.toString().trim() != "") {
             range = selectedText.getRangeAt(0)
         }
         else {
@@ -112,6 +95,27 @@ export const SingleNewsCard = (props) => {
         setSelectedArray([...selectedArray, rangeToObj(range)])
         setShowPopup(true)
         setPosition({ top, left })
+    }
+    console.log(selectedArray)
+
+    const getHighLight = () => {
+        console.log(lastIndex)
+        document.designMode = "on"
+        var selArr
+        if (lastIndex === 0) {
+            selArr = selectedArray
+            setLastIndex(selectedArray.length)
+        } else {
+            selArr = selectedArray.slice(lastIndex)
+            setLastIndex(selectedArray.length)
+        }
+        var sel = getSelection()
+        selArr.forEach(function (each) {
+            sel.removeAllRanges()
+            sel.addRange(objToRange(each))
+            document.execCommand("hiliteColor", false, each.color)
+        })
+        document.designMode = "off"
     }
 
     const handleAddTopic = () => {
@@ -124,7 +128,7 @@ export const SingleNewsCard = (props) => {
     return (
         <>
             <div className="entity_title">
-                <button type="button" onClick={getHighLight}>get Highlight</button>
+                <button type="button" onClick={() => getHighLight()}>get Highlight</button>
                 <h1>
                     <a href="#">{news.title}</a>
                 </h1>
