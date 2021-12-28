@@ -1,13 +1,12 @@
 import React, { Fragment, useState, useEffect } from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { SingleNewsCard } from '../components/skeletons/SingleNewsCard'
-import { Sidebar } from '../components/skeletons/Sidebar'
 import { Loading } from '../components/includes/Loading'
 import { Comments } from '../components/includes/Comments'
 import { CommentForm } from '../components/includes/CommentForm'
 import { Link, useRouteMatch } from 'react-router-dom'
 import { getPostBySlug } from '../slices/postSlice'
-import { useDispatch } from 'react-redux'
+import { addTopicComment, addPostComment } from '../slices/commentSlice'
 
 export default function NewsDetailPage() {
     const dispatch = useDispatch()
@@ -17,9 +16,11 @@ export default function NewsDetailPage() {
     const [postComments, setPostComments] = useState([])
     const [topicComments, setTopicComments] = useState([])
     const [showAddTopic, setShowAddTopic] = useState(false)
-    const [content, setContent] = useState("")
+    const [newTopicComment, setNewTopicComment] = useState({})
+    const [newPostComment, setNewPostComment] = useState({})
 
-    const { authenticated } = useSelector(state => state.auth)
+
+    const { authenticated, user } = useSelector(state => state.auth)
     useEffect(() => {
         const fetchPostBySlug = async () => {
             const res = await dispatch(getPostBySlug(slug)).unwrap()
@@ -31,16 +32,49 @@ export default function NewsDetailPage() {
         window.scrollTo(0, 0)
     }, [slug])
 
+    useEffect(() => {
+        setNewTopicComment({ postId: post._id })
+        setNewPostComment({ postId: post._id })
+    }, [post])
+
     if (Object.keys(post).length === 0) {
         return <Loading />
     }
 
-    const handleSubmitAddPostComment = (e) => {
+    const handleSubmitAddPostComment = async (e) => {
         e.preventDefault()
+        if (newPostComment.content && newPostComment.postId) {
+            const res = await dispatch(addPostComment(newPostComment)).unwrap()
+            if (res.data.success) {
+                alert("Thêm bình luận về bài viết thành công")
+                let res = await dispatch(getPostBySlug(slug)).unwrap()
+                setTopicComments(res.data.postComments)
+            } else {
+                alert("Thêm bình luận về bài viết thật bại")
+            }
+        }
     }
 
-    const handleSubmitAddTopicComment = (e) => {
+    const handleSubmitAddTopicComment = async (e) => {
         e.preventDefault()
+        if (newTopicComment.content && newTopicComment.postId && newTopicComment.position) {
+            const res = await dispatch(addTopicComment(newTopicComment)).unwrap()
+            if (res.data.success) {
+                alert("Thêm bình luận về chủ đề thành công")
+                let res = await dispatch(getPostBySlug(slug)).unwrap()
+                setTopicComments(res.data.topicComments)
+            } else {
+                alert("Thêm bình luận về chủ đề thật bại")
+            }
+        }
+    }
+
+    const getSelectedArray = (array) => {
+        var output = []
+        array.forEach((element) => {
+            output.push(element.position)
+        })
+        return output
     }
 
     return (
@@ -50,7 +84,12 @@ export default function NewsDetailPage() {
                     {post && (
                         <div className="col-md-8">
                             <div className="entity_wrapper">
-                                <SingleNewsCard news={post} setShowAddTopic={setShowAddTopic} />
+                                <SingleNewsCard news={post}
+                                    setShowAddTopic={setShowAddTopic}
+                                    newTopicComment={newTopicComment}
+                                    setNewTopicComment={setNewTopicComment}
+                                    highlightArray={getSelectedArray(topicComments).reverse()}
+                                />
                                 {/* entity_content */}
                                 <div className="entity_footer">
                                     {/* entity_tag */}
@@ -77,6 +116,8 @@ export default function NewsDetailPage() {
                                 {authenticated ? (
                                     <CommentForm
                                         handleSubmit={handleSubmitAddPostComment}
+                                        content={newPostComment.content}
+                                        setContent={(content) => setNewPostComment({ ...newPostComment, content })}
                                     />) : <p>
                                     Để bình luận về bài viết vui lòng <Link to="/login">Đăng nhập</Link>
                                 </p>}
@@ -88,7 +129,7 @@ export default function NewsDetailPage() {
                                         <div className="entity_inner__title header_purple">
                                             <h2>Bình luận [{postComments.length}]</h2>
                                         </div>
-                                        <Comments comments={postComments} />
+                                        <Comments comments={postComments} user={user} type="post" />
                                     </Fragment>
                                 ) : (
                                     ""
@@ -104,10 +145,14 @@ export default function NewsDetailPage() {
                                         <a href="#">Thảo luận </a>
                                     </h2>
                                 </div>
-                                {showAddTopic && <CommentForm />}
+                                {showAddTopic && <CommentForm
+                                    handleSubmit={handleSubmitAddTopicComment}
+                                    content={newTopicComment.content}
+                                    setContent={(content) => setNewTopicComment({ ...newTopicComment, content })}
+                                />}
                                 {
-                                    topicComments.length == 0 ?
-                                        <Comments comments={topicComments} />
+                                    topicComments.length > 0 ?
+                                        <Comments comments={topicComments} user={user} type="topic" />
                                         : <h3>Hiện tại chưa có bất kì bàn luận nào về chủ đề </h3>
                                 }
 

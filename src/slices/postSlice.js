@@ -76,6 +76,16 @@ export const postSlice = createSlice({
             state.loading = false;
             state.posts = action.payload.data.posts;
         },
+        [getPostBySlug.pending]: (state) => {
+            state.loading = true;
+        },
+        [getPostBySlug.rejected]: (state, action) => {
+            state.loading = false;
+            state.error = action.error;
+        },
+        [getPostBySlug.fulfilled]: (state, action) => {
+            state.loading = false;
+        },
     },
 });
 

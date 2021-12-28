@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react"
 import moment from "moment"
 import Popover from "../includes/Popover"
 
-var key = 0
 
+var key = 0
 const rangeToObj = (range) => {
     return {
         startKey: range.startContainer.parentNode.dataset.key,
@@ -23,6 +23,7 @@ const rangeToObj = (range) => {
 }
 const objToRange = (rangeStr) => {
     let range = document.createRange()
+
     range.setStart(
         document.querySelector('[data-key="' + rangeStr.startKey + '"]')
             .childNodes[rangeStr.startTextIndex],
@@ -49,14 +50,10 @@ const colors = [
 ]
 
 
-
-
 export const SingleNewsCard = (props) => {
-    const { news, setShowAddTopic } = props
+    const { news, setShowAddTopic, newTopicComment, setNewTopicComment, highlightArray } = props
     const [position, setPosition] = useState({})
     const [showPopup, setShowPopup] = useState(false)
-    const [selectedArray, setSelectedArray] = useState([
-    ])
     const [lastIndex, setLastIndex] = useState(0);
 
     useEffect(() => {
@@ -68,9 +65,12 @@ export const SingleNewsCard = (props) => {
                 })
             }
         }
-        addKey(document.body)
+        addKey(document.querySelector(".wrapper_post"))
     }, [])
 
+    useEffect(() => {
+        getHighLight()
+    }, [highlightArray])
 
 
 
@@ -81,33 +81,30 @@ export const SingleNewsCard = (props) => {
         var clientX = clientRect.left
         var clientY = clientRect.top
         const left = e.pageX - clientX - document.documentElement.scrollLeft + 30
-        const top = e.pageY - clientY - document.documentElement.scrollTop + 80
+        const top = e.pageY - clientY - document.documentElement.scrollTop + 50
         // -----------------
         let range
         if (selectedText.toString().trim() != "") {
             range = selectedText.getRangeAt(0)
+            setNewTopicComment({ ...newTopicComment, position: rangeToObj(range) })
+            setShowPopup(true)
+            setPosition({ top, left })
         }
         else {
             setShowPopup(false)
             setShowAddTopic(false)
-            return;
         }
-        setSelectedArray([...selectedArray, rangeToObj(range)])
-        setShowPopup(true)
-        setPosition({ top, left })
     }
-    console.log(selectedArray)
 
     const getHighLight = () => {
-        console.log(lastIndex)
         document.designMode = "on"
         var selArr
         if (lastIndex === 0) {
-            selArr = selectedArray
-            setLastIndex(selectedArray.length)
+            selArr = highlightArray
+            setLastIndex(highlightArray.length)
         } else {
-            selArr = selectedArray.slice(lastIndex)
-            setLastIndex(selectedArray.length)
+            selArr = highlightArray.slice(lastIndex)
+            setLastIndex(highlightArray.length)
         }
         var sel = getSelection()
         selArr.forEach(function (each) {
@@ -120,15 +117,11 @@ export const SingleNewsCard = (props) => {
 
     const handleAddTopic = () => {
         setShowAddTopic(true)
-        document.designMode = "on"
-        document.execCommand("hiliteColor", false, selectedArray[selectedArray.length - 1].color)
-        document.designMode = "off"
     }
 
     return (
-        <>
+        <div className="wrapper_post">
             <div className="entity_title">
-                <button type="button" onClick={() => getHighLight()}>get Highlight</button>
                 <h1>
                     <a href="#">{news.title}</a>
                 </h1>
@@ -159,6 +152,6 @@ export const SingleNewsCard = (props) => {
                     show={showPopup}
                 />
             </div>
-        </>
+        </div>
     )
 }

@@ -1,72 +1,29 @@
-import React, { Fragment } from "react"
+import React, { Fragment, useState } from "react"
 import NoAvatar from "../../assets/images/user-icon.png"
+import { addSubTopicComment, addSubPostComment } from "../../slices/commentSlice"
+import { useDispatch } from "react-redux"
 export const Comments = (props) => {
-    // const { comments , user } = props
-    const user = { avatar: null }
-    const comments = [
-        {
-            _id: "213213",
-            userId: {
-                name: "Tan Nguyen"
-            },
-            content: "hahahahahahahha",
-            subComments: [{
-                content: "hahaaha",
-                _id: "213213",
-                userId: {
-                    name: "Tan Nguyen",
-                }
-            }, {
-                content: "hahaaha",
-                _id: "213213",
-                userId: {
-                    name: "Tan Nguyen",
-                }
-            }]
-        }, {
-            _id: "213213",
-            userId: {
-                name: "Tan Nguyen"
-            },
-            content: "hahahahahahahha",
-            subComments: [{
-                content: "hahaaha",
-                _id: "213213",
-                userId: {
-                    name: "Tan Nguyen",
-
-                }
-            }]
-        }, {
-            _id: "213213",
-            userId: {
-                name: "Tan Nguyen"
-            },
-            content: "hahahahahahahha",
-            subComments: [{
-                content: "hahaaha",
-                _id: "213213",
-                userId: {
-                    name: "Tan Nguyen",
-
-                }
-            }]
-        }, {
-            _id: "213213",
-            userId: {
-                name: "Tan Nguyen"
-            },
-            content: "hahahahahahahha",
-            subComments: []
+    const { comments, user, type } = props
+    const [reply, setReply] = useState({ _id: "", content: "" })
+    const dispatch = useDispatch()
+    const handleReplyComment = async (e) => {
+        e.preventDefault()
+        if (reply._id && reply.content) {
+            if (type === "topic") {
+                await dispatch(addSubTopicComment(reply))
+            } else if (type === "post") {
+                await dispatch(addSubPostComment(reply))
+            }
         }
-    ]
+
+    }
 
     return (
         <Fragment>
             {comments &&
                 comments.map((comment) => {
                     return (
-                        <div className="media comment">
+                        <div className="media comment" key={comment._id}>
                             <div className="media-left">
                                 <a href="#">
                                     <img
@@ -106,8 +63,10 @@ export const Comments = (props) => {
                                     </div>
                                     <div className="media-body">
                                         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                            <input className="input comment" />
-                                            <button>Gửi</button>
+                                            <input className="input comment"
+                                                value={reply.content}
+                                                onChange={(e) => setReply({ _id: comment._id, content: e.target.value })} />
+                                            <button onClick={(e) => handleReplyComment(e)}>Gửi</button>
                                         </div>
                                     </div>
                                 </div>
@@ -129,7 +88,7 @@ export const Comments = (props) => {
                                                     <h3 className="media-heading">
                                                         <a href="#">{reply.userId.name}</a>
                                                     </h3>
-                                                    {comment.content}
+                                                    {reply.content}
                                                 </div>
                                             </div>
                                         )
