@@ -76,7 +76,6 @@ export const SingleNewsCard = (props) => {
   useEffect(() => {
     getHighLight()
   }, [selectedArray])
-
   const handleSelectedText = (e) => {
     const selectedText = window.getSelection()
     var element = document.getElementById('post-details')
