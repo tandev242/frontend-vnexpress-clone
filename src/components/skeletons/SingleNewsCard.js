@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import moment from 'moment'
 import Popover from '../includes/Popover'
-import { useHistory } from 'react-router-dom'
 
 var key = 0
 
@@ -24,6 +23,9 @@ const rangeToObj = (range) => {
 }
 const objToRange = (rangeStr) => {
   let range = document.createRange()
+  if (!rangeStr.startKey || !rangeStr.endKey) {
+    throw new Error('rangStr invalid')
+  }
 
   range.setStart(
     document.querySelector('[data-key="' + rangeStr.startKey + '"]').childNodes[
@@ -94,11 +96,9 @@ export const SingleNewsCard = (props) => {
     }
 
     setCurrentHighlight(rangeToObj(range))
-    console.log(rangeToObj(range))
     setShowPopup(true)
     setPosition({ top, left })
   }
-  console.log(currentHighlight)
   const addHighlight = () => {
     undoCommand()
     setSelectedArray((prev) => [...prev, currentHighlight])
@@ -113,12 +113,17 @@ export const SingleNewsCard = (props) => {
   }
   const getHighLight = () => {
     document.designMode = 'on'
-    var sel = getSelection()
-    selectedArray.forEach(function (each) {
-      sel.removeAllRanges()
-      sel.addRange(objToRange(each))
-      document.execCommand('hiliteColor', false, each.color)
-    })
+    try {
+      var sel = getSelection()
+      selectedArray.forEach(function (each) {
+        sel.removeAllRanges()
+        sel.addRange(objToRange(each))
+        document.execCommand('hiliteColor', false, each.color)
+      })
+    } catch (error) {
+      console.log(error)
+    }
+
     document.designMode = 'off'
   }
 
@@ -133,9 +138,8 @@ export const SingleNewsCard = (props) => {
     document.designMode = 'off'
   }
   const deleteHighlight = () => {
-    if (!selectedArray.length) return
-    // const index = Math.floor(Math.random() * selectedArray.length)
-    const index = 0
+    const index = Math.floor(Math.random() * selectedArray.length)
+    if (!selectedArray[index]) return
     let tempArray = [...selectedArray]
     const {
       startKey,
@@ -176,7 +180,6 @@ export const SingleNewsCard = (props) => {
         }
       } else {
         if (endKey === tempArray[i].startKey) {
-          console.log(1)
           tempArray[i].startTextIndex -= 1
           if (tempArray[i].startTextIndex < 2) {
             tempArray[i].startOffset += endOffset
@@ -189,7 +192,6 @@ export const SingleNewsCard = (props) => {
       }
     }
     tempArray.splice(index, 1)
-    console.log(tempArray)
     undoCommand()
     setSelectedArray(tempArray)
   }
