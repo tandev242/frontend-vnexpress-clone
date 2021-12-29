@@ -8,6 +8,7 @@ import ForgotPasswordPage from './pages/ForgotPasswordPage'
 import LoginPage from './pages/LoginPage'
 import { useSelector } from 'react-redux'
 import ResetPassword from './pages/ResetPassword'
+import ProfilePage from './pages/ProfilePage'
 
 const BaseRouter = () => {
   const { user } = useSelector((state) => state.auth)
@@ -21,6 +22,7 @@ const BaseRouter = () => {
       <Route exact path="/resetPassword/:token" component={ResetPassword} />
       <Route exact path="/forgotPassword" component={ForgotPasswordPage} />
       <Route exact path="/login" component={LoginPage} />
+      {user && <Route exact path="/userProfile" component={ProfilePage} />}
       <Route
         path={[`/collections/:slug/:subSlug`, `/collections/:slug`]}
         exact
