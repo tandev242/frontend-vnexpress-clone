@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import moment from 'moment'
 import Popover from '../includes/Popover'
-
+import $ from 'jquery'
 var key = 0
 
 const rangeToObj = (range) => {
@@ -16,13 +16,16 @@ const rangeToObj = (range) => {
       range.endContainer.parentNode.childNodes,
       range.endContainer
     ),
+
     startOffset: range.startOffset,
     endOffset: range.endOffset,
     color: colors[Math.floor(Math.random() * colors.length)],
   }
 }
 const objToRange = (rangeStr) => {
+  console.log(rangeStr.endOffset, rangeStr.startOffset)
   let range = document.createRange()
+
   if (!rangeStr.startKey || !rangeStr.endKey) {
     throw new Error('rangStr invalid')
   }
@@ -58,9 +61,27 @@ export const SingleNewsCard = (props) => {
   const { news, setShowAddTopic } = props
   const [position, setPosition] = useState({})
   const [showPopup, setShowPopup] = useState(false)
-  const [selectedArray, setSelectedArray] = useState([])
+  const [selectedArray, setSelectedArray] = useState([
+    {
+      startKey: '156',
+      startTextIndex: 0,
+      endKey: '156',
+      endTextIndex: 0,
+      startOffset: 43,
+      endOffset: 66,
+      color: '#9799BA',
+    },
+    {
+      startKey: '154',
+      startTextIndex: 2,
+      endKey: '154',
+      endTextIndex: 2,
+      startOffset: 33,
+      endOffset: 51,
+      color: '#ECAD8F',
+    },
+  ])
   const [currentHighlight, setCurrentHighlight] = useState({})
-
   useEffect(() => {
     const addKey = (element) => {
       if (element.children.length > 0) {
@@ -72,8 +93,8 @@ export const SingleNewsCard = (props) => {
     }
     addKey(document.body)
   }, [])
-
   useEffect(() => {
+    removeHighlight()
     getHighLight()
   }, [selectedArray])
 
@@ -88,10 +109,20 @@ export const SingleNewsCard = (props) => {
     // -----------------
     let range
     if (selectedText.toString().trim() != '') {
+      if (selectedArray[selectedArray.length - 1].temp) {
+        return deleteHighlight()
+      }
       range = selectedText.getRangeAt(0)
     } else {
       setShowPopup(false)
       setShowAddTopic(false)
+      if (
+        selectedArray[selectedArray.length - 1] &&
+        selectedArray[selectedArray.length - 1].temp
+      ) {
+        //delete temporary highlight
+        deleteHighlight()
+      }
       return
     }
 
@@ -99,46 +130,55 @@ export const SingleNewsCard = (props) => {
     setShowPopup(true)
     setPosition({ top, left })
   }
-  const addHighlight = () => {
-    undoCommand()
-    setSelectedArray((prev) => [...prev, currentHighlight])
+
+  const addTempHighlight = () => {
+    if (Object.keys(currentHighlight).length === 0) return
+    let currentObject = { ...currentHighlight }
+    //temporary add to array
+    currentObject.temp = true
+    setSelectedArray((prev) => [...prev, currentObject])
     setCurrentHighlight({})
   }
-  const undoCommand = () => {
-    document.designMode = 'on'
-    for (let i = 0; i < selectedArray.length; i++) {
-      document.execCommand('undo', false, null)
-    }
-    document.designMode = 'off'
+  const addHighlight = () => {
+    setSelectedArray((prev) => {
+      const clone = [...prev]
+      const lastElement = clone[clone.length - 1]
+      lastElement.temp = undefined
+      return [...clone]
+    })
+  }
+  const removeHighlight = () => {
+    $('.highlight').each(function (i) {
+      const content = $(this)[0].innerHTML
+      $(this).prop('outerHTML', content)
+    })
   }
   const getHighLight = () => {
     document.designMode = 'on'
     try {
       var sel = getSelection()
-      selectedArray.forEach(function (each) {
+      selectedArray.forEach(function (each, index) {
         sel.removeAllRanges()
         sel.addRange(objToRange(each))
-        document.execCommand('hiliteColor', false, each.color)
+        // document.execCommand('hiliteColor', false, each.color)
+        const selection = sel.toString()
+        const wrappedselection =
+          `<span class="highlight" style= "background-color:${each.color};">` +
+          selection +
+          '</span>'
+        document.execCommand('insertHTML', false, wrappedselection)
       })
     } catch (error) {
       console.log(error)
     }
-
     document.designMode = 'off'
   }
 
   const handleAddTopic = () => {
+    addTempHighlight()
     setShowAddTopic(true)
-    document.designMode = 'on'
-    document.execCommand(
-      'hiliteColor',
-      false,
-      selectedArray[selectedArray.length - 1].color
-    )
-    document.designMode = 'off'
   }
-  const deleteHighlight = () => {
-    const index = Math.floor(Math.random() * selectedArray.length)
+  const deleteHighlight = (index = selectedArray.length - 1) => {
     if (!selectedArray[index]) return
     let tempArray = [...selectedArray]
     const {
@@ -192,7 +232,6 @@ export const SingleNewsCard = (props) => {
       }
     }
     tempArray.splice(index, 1)
-    undoCommand()
     setSelectedArray(tempArray)
   }
 
@@ -202,7 +241,7 @@ export const SingleNewsCard = (props) => {
         <button type="button" onClick={addHighlight}>
           add Highlight
         </button>
-        <button type="button" onClick={deleteHighlight}>
+        <button type="button" onClick={removeHighlight}>
           delete Highlight
         </button>
         <h1>
