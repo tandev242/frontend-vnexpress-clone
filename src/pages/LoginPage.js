@@ -4,8 +4,9 @@ import { Link } from 'react-router-dom'
 import { useHistory } from 'react-router-dom'
 import { Loading } from '../components/includes/Loading'
 import { ToastContainer, toast } from 'react-toastify'
+import GoogleLogin from "react-google-login"
 import 'react-toastify/dist/ReactToastify.css'
-import { login, authAction } from '../slices/authSlice'
+import { login, authAction, loginByGoogle } from '../slices/authSlice'
 import Modal from '../components/includes/Modal'
 
 export default function LoginPage() {
@@ -34,6 +35,10 @@ export default function LoginPage() {
   const onChange = (e) => {
     setUser({ ...userData, [e.target.name]: e.target.value })
   }
+
+  const handleLoginByGoogle = async (googleData) => {
+    await dispatch(loginByGoogle({ token: googleData.tokenId }));
+  };
 
   if (authenticated) {
     history.push('/')
@@ -102,10 +107,19 @@ export default function LoginPage() {
                     'Login'
                   )}
                 </button>
+
                 <div className="register-link m-t-15 text-center">
-                  <p>
-                    Did Not have account ? <Link to="/register">Sign In</Link>
+                  <GoogleLogin
+                    clientId="707494384451-n2h8k22labbk1hqo3abuen1i5kdp40dn.apps.googleusercontent.com"
+                    buttonText="Đăng nhập bằng Google"
+                    onSuccess={handleLoginByGoogle}
+                    onFailure={() => alert("Đăng nhập không thành công")}
+                    cookiePolicy={"single_host_origin"}
+                  />
+                  <p style={{ marginTop: "20px" }}>
+                    Did Not have account ? <Link to="/register">Sign Up</Link>
                   </p>
+
                 </div>
                 <div className="m-t-15 text-center">
                   <p>or</p>

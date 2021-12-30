@@ -4,6 +4,7 @@ const authApi = {
   getCurrentUser: () =>
     axiosInstance.get(`${baseURL.query}/user/getCurrentUser`),
   login: (user) => axiosInstance.post(`${baseURL.auth}/auth/login`, user),
+  loginByGoogle: (token) => axiosInstance.post(`${baseURL.auth}/auth/google`, token),
   register: (user) => axiosInstance.post(`${baseURL.user}/user/signUp`, user),
   registerAdmin: (user) =>
     axiosInstance.post(`${baseURL.user}/user/signUpForAdmin`, user),

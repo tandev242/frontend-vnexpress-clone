@@ -1366,7 +1366,7 @@ section {
 
 .widget .media.comment{
     padding: 5px;
-    border: 1px solid rgb(185, 177, 177);
+    border: 5px solid rgb(185, 177, 177);
     background-color: #F8F9FA;
     border-radius: 10px;
     margin-top: 0;
