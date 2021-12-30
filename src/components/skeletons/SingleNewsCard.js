@@ -16,7 +16,6 @@ const rangeToObj = (range) => {
       range.endContainer.parentNode.childNodes,
       range.endContainer
     ),
-
     startOffset: range.startOffset,
     endOffset: range.endOffset,
     color: colors[Math.floor(Math.random() * colors.length)],

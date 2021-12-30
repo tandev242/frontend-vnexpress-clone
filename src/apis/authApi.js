@@ -12,6 +12,12 @@ const authApi = {
     axiosInstance.post(`${baseURL.user}/user/forgotPassword`, email),
   resetPassword: (password, token) =>
     axiosInstance.post(`${baseURL.user}/user/resetPassword/${token}`, password),
+  uploadAvatar: (formData) =>
+    axiosInstance.post(`${baseURL.user}/user/uploadAvatar`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    }),
 }
 
 export default authApi

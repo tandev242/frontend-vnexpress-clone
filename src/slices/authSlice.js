@@ -84,6 +84,20 @@ export const resetPassword = createAsyncThunk(
     }
   }
 )
+export const uploadAvatar = createAsyncThunk(
+  'auth/uploadAvatar',
+  async (file, { rejectWithValue }) => {
+    try {
+      const formData = new FormData()
+      formData.append('avatar', file)
+      const response = await authApi.uploadAvatar(formData)
+      console.log(response)
+      return response
+    } catch (error) {
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
 
 const initialState = {
   loading: false,
@@ -110,7 +124,7 @@ export const authSlice = createSlice({
       state.loading = true
     },
     [getCurrentUser.rejected]: (state, action) => {
-      state.loading = false;
+      state.loading = false
     },
     [getCurrentUser.fulfilled]: (state, action) => {
       state.loading = false
@@ -186,6 +200,18 @@ export const authSlice = createSlice({
     },
     [resetPassword.fulfilled]: (state, action) => {
       state.loading = false
+    },
+    [uploadAvatar.pending]: (state) => {
+      state.loading = true
+    },
+    [uploadAvatar.rejected]: (state, action) => {
+      state.loading = false
+      state.error = action.payload.msg
+    },
+    [uploadAvatar.fulfilled]: (state, action) => {
+      state.loading = false
+
+      state.user.avatar = action.payload.data.avatar
     },
   },
 })

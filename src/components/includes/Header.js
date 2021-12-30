@@ -14,6 +14,9 @@ export const Header = () => {
     dispatch(authAction.logout())
     history.push('/')
   }
+  const handleMoveToProfilePage = () => {
+    history.push('/userProfile')
+  }
 
   return (
     <section id="header_section_wrapper" className="header_section_wrapper">
@@ -94,8 +97,23 @@ export const Header = () => {
                         <ul className="dropdown-menu">
                           <li
                             className="btn logout"
+                            onClick={handleMoveToProfilePage}
+                            style={{
+                              cursor: 'pointer',
+                              padding: '5px 25px',
+                              color: '#A0224F',
+                            }}
+                          >
+                            Tài khoản của tôi
+                          </li>
+                          <li
+                            className="btn logout"
                             onClick={HandleLogout}
-                            style={{ cursor: 'pointer', padding: "5px 25px", color: "#A0224F" }}
+                            style={{
+                              cursor: 'pointer',
+                              padding: '5px 25px',
+                              color: '#A0224F',
+                            }}
                           >
                             Log out
                           </li>
