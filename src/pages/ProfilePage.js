@@ -115,22 +115,6 @@ export default function ProfilePage() {
             </a>
           )}
         </div>
-
-        {/* <div className="col-7 m-5">
-        <h1>Hồ sơ của tôi</h1>
-      </div>
-      <div>
-        <h4>Ảnh đại diện</h4>
-        <img
-          src="<%=avatar%>"
-          alt=""
-          width="200px"
-          height="200px"
-          id="old-avatar"
-          style="border-radius:50%"
-        />
-        <input type="file" id="avatar" name="avatar" />
-      </div> */}
       </div>
       <Link to="/forgotPassword"> Change Password</Link>
     </div>
