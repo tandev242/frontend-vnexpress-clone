@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from 'react'
+import React, { Fragment, useState, useEffect, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { SingleNewsCard } from '../components/skeletons/SingleNewsCard'
 import { Loading } from '../components/includes/Loading'
@@ -20,6 +20,9 @@ export default function NewsDetailPage() {
   const [newPostComment, setNewPostComment] = useState({})
 
   const { authenticated, user } = useSelector((state) => state.auth)
+
+  //call children function from parent component
+  
   useEffect(() => {
     const fetchPostBySlug = async () => {
       const res = await dispatch(getPostBySlug(slug)).unwrap()
@@ -56,7 +59,6 @@ export default function NewsDetailPage() {
 
   const handleSubmitAddTopicComment = async (e) => {
     e.preventDefault()
-
     if (
       newTopicComment.content &&
       newTopicComment.postId &&

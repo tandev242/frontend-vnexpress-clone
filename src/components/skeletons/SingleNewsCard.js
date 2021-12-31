@@ -1,4 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React, {
+  useState,
+  useEffect,
+  useImperativeHandle,
+  forwardRef,
+} from 'react'
 import moment from 'moment'
 import Popover from '../includes/Popover'
 import $ from 'jquery'
@@ -22,7 +27,6 @@ const rangeToObj = (range) => {
   }
 }
 const objToRange = (rangeStr) => {
-  console.log(rangeStr.endOffset, rangeStr.startOffset)
   let range = document.createRange()
 
   if (!rangeStr.startKey || !rangeStr.endKey) {
@@ -57,41 +61,29 @@ const colors = [
 ]
 
 export const SingleNewsCard = (props) => {
-  const { news, setShowAddTopic } = props
+  const { news, setShowAddTopic, setNewTopicComment, highlightArray } = props
   const [position, setPosition] = useState({})
   const [showPopup, setShowPopup] = useState(false)
-  const [selectedArray, setSelectedArray] = useState([
-    {
-      startKey: '156',
-      startTextIndex: 0,
-      endKey: '156',
-      endTextIndex: 0,
-      startOffset: 43,
-      endOffset: 66,
-      color: '#9799BA',
-    },
-    {
-      startKey: '154',
-      startTextIndex: 2,
-      endKey: '154',
-      endTextIndex: 2,
-      startOffset: 33,
-      endOffset: 51,
-      color: '#ECAD8F',
-    },
-  ])
+  const [selectedArray, setSelectedArray] = useState([])
   const [currentHighlight, setCurrentHighlight] = useState({})
+
+  // can call this function from parent element
+  useEffect(() => {
+    setSelectedArray(highlightArray)
+  }, [highlightArray])
+
   useEffect(() => {
     const addKey = (element) => {
       if (element.children.length > 0) {
-        Array.prototype.forEach.call(element.children, function (each, i) {
+        Array.prototype.forEach.call(element.children, function (each) {
           each.dataset.key = key++
           addKey(each)
         })
       }
     }
-    addKey(document.body)
+    addKey(document.querySelector('#post-details'))
   }, [])
+
   useEffect(() => {
     removeHighlight()
     getHighLight()
@@ -108,7 +100,10 @@ export const SingleNewsCard = (props) => {
     // -----------------
     let range
     if (selectedText.toString().trim() != '') {
-      if (selectedArray[selectedArray.length - 1].temp) {
+      if (
+        selectedArray[selectedArray.length - 1] &&
+        selectedArray[selectedArray.length - 1].temp
+      ) {
         return deleteHighlight()
       }
       range = selectedText.getRangeAt(0)
@@ -130,14 +125,20 @@ export const SingleNewsCard = (props) => {
     setPosition({ top, left })
   }
 
+  //push current highlight into selected Array temporary
   const addTempHighlight = () => {
     if (Object.keys(currentHighlight).length === 0) return
     let currentObject = { ...currentHighlight }
+    setNewTopicComment((prev) => {
+      return { ...prev, position: currentObject }
+    })
     //temporary add to array
     currentObject.temp = true
     setSelectedArray((prev) => [...prev, currentObject])
     setCurrentHighlight({})
   }
+
+  //last element in highlight in db and can not remove by clicking
   const addHighlight = () => {
     setSelectedArray((prev) => {
       const clone = [...prev]
@@ -146,12 +147,16 @@ export const SingleNewsCard = (props) => {
       return [...clone]
     })
   }
+
+  //remove on highlight is on the POST
   const removeHighlight = () => {
     $('.highlight').each(function (i) {
       const content = $(this)[0].innerHTML
       $(this).prop('outerHTML', content)
     })
   }
+
+  // highlight all topic in post
   const getHighLight = () => {
     document.designMode = 'on'
     try {
@@ -159,13 +164,13 @@ export const SingleNewsCard = (props) => {
       selectedArray.forEach(function (each, index) {
         sel.removeAllRanges()
         sel.addRange(objToRange(each))
-        // document.execCommand('hiliteColor', false, each.color)
-        const selection = sel.toString()
-        const wrappedselection =
-          `<span class="highlight" style= "background-color:${each.color};">` +
-          selection +
-          '</span>'
-        document.execCommand('insertHTML', false, wrappedselection)
+        document.execCommand('hiliteColor', false, each.color)
+        const list = sel.baseNode.parentNode
+          ? [sel.focusNode.parentNode, sel.baseNode.parentNode]
+          : [sel.focusNode.parentNode]
+        $(list).each(function () {
+          $(this).addClass('highlight')
+        })
       })
     } catch (error) {
       console.log(error)
@@ -173,10 +178,13 @@ export const SingleNewsCard = (props) => {
     document.designMode = 'off'
   }
 
+  //push current topic in selected array and show topic comment
   const handleAddTopic = () => {
     addTempHighlight()
     setShowAddTopic(true)
   }
+
+  //delete topic in array default last topic
   const deleteHighlight = (index = selectedArray.length - 1) => {
     if (!selectedArray[index]) return
     let tempArray = [...selectedArray]
