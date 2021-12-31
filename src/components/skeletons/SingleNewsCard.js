@@ -61,16 +61,20 @@ const colors = [
 ]
 
 export const SingleNewsCard = (props) => {
-  const { news, setShowAddTopic, setNewTopicComment, highlightArray } = props
+  const { news, setShowAddTopic, setNewTopicComment, topicComments } = props
   const [position, setPosition] = useState({})
   const [showPopup, setShowPopup] = useState(false)
   const [selectedArray, setSelectedArray] = useState([])
   const [currentHighlight, setCurrentHighlight] = useState({})
-
+  console.log(topicComments)
   // can call this function from parent element
   useEffect(() => {
+    console.log('update from server')
+    const highlightArray = topicComments.map(
+      (topicComment) => topicComment.position
+    )
     setSelectedArray(highlightArray)
-  }, [highlightArray])
+  }, [topicComments])
 
   useEffect(() => {
     const addKey = (element) => {
@@ -119,7 +123,6 @@ export const SingleNewsCard = (props) => {
       }
       return
     }
-
     setCurrentHighlight(rangeToObj(range))
     setShowPopup(true)
     setPosition({ top, left })
@@ -139,14 +142,14 @@ export const SingleNewsCard = (props) => {
   }
 
   //last element in highlight in db and can not remove by clicking
-  const addHighlight = () => {
-    setSelectedArray((prev) => {
-      const clone = [...prev]
-      const lastElement = clone[clone.length - 1]
-      lastElement.temp = undefined
-      return [...clone]
-    })
-  }
+  // const addHighlight = () => {
+  //   setSelectedArray((prev) => {
+  //     const clone = [...prev]
+  //     const lastElement = clone[clone.length - 1]
+  //     lastElement.temp = undefined
+  //     return [...clone]
+  //   })
+  // }
 
   //remove on highlight is on the POST
   const removeHighlight = () => {
@@ -245,12 +248,10 @@ export const SingleNewsCard = (props) => {
   return (
     <>
       <div className="entity_title">
-        <button type="button" onClick={addHighlight}>
-          add Highlight
-        </button>
+        {/* <button type="button">add Highlight</button>
         <button type="button" onClick={removeHighlight}>
           delete Highlight
-        </button>
+        </button> */}
         <h1>
           <a href="#">{news.title}</a>
         </h1>

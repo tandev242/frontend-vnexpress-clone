@@ -1,4 +1,10 @@
-import React, { Fragment, useState, useEffect, useRef } from 'react'
+import React, {
+  Fragment,
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+} from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { SingleNewsCard } from '../components/skeletons/SingleNewsCard'
 import { Loading } from '../components/includes/Loading'
@@ -22,7 +28,7 @@ export default function NewsDetailPage() {
   const { authenticated, user } = useSelector((state) => state.auth)
 
   //call children function from parent component
-  
+
   useEffect(() => {
     const fetchPostBySlug = async () => {
       const res = await dispatch(getPostBySlug(slug)).unwrap()
@@ -75,13 +81,16 @@ export default function NewsDetailPage() {
     }
   }
 
-  const getSelectedArray = (array) => {
-    var output = []
-    array.forEach((element) => {
-      output.push(element.position)
-    })
-    return output
-  }
+  // const getSelectedArray = useCallback(
+  //   (array) => {
+  //     var output = []
+  //     array.forEach((element) => {
+  //       output.push(element.position)
+  //     })
+  //     return output
+  //   },
+  //   [topicComments]
+  // )
 
   return (
     <section id="entity_section" className="entity_section">
@@ -95,7 +104,7 @@ export default function NewsDetailPage() {
                   setShowAddTopic={setShowAddTopic}
                   newTopicComment={newTopicComment}
                   setNewTopicComment={setNewTopicComment}
-                  highlightArray={getSelectedArray(topicComments).reverse()}
+                  topicComments={topicComments}
                 />
                 {/* entity_content */}
                 <div className="entity_footer">
