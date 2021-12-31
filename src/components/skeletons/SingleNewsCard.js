@@ -1,13 +1,7 @@
-import React, {
-  useState,
-  useEffect,
-  useImperativeHandle,
-  forwardRef,
-} from 'react'
+import React, { useState, useEffect } from 'react'
 import moment from 'moment'
 import Popover from '../includes/Popover'
 import $ from 'jquery'
-var key = 0
 
 const rangeToObj = (range) => {
   return {
@@ -28,7 +22,6 @@ const rangeToObj = (range) => {
 }
 const objToRange = (rangeStr) => {
   let range = document.createRange()
-
   if (!rangeStr.startKey || !rangeStr.endKey) {
     throw new Error('rangStr invalid')
   }
@@ -66,16 +59,7 @@ export const SingleNewsCard = (props) => {
   const [showPopup, setShowPopup] = useState(false)
   const [selectedArray, setSelectedArray] = useState([])
   const [currentHighlight, setCurrentHighlight] = useState({})
-  console.log(topicComments)
-  // can call this function from parent element
-  useEffect(() => {
-    console.log('update from server')
-    const highlightArray = topicComments.map(
-      (topicComment) => topicComment.position
-    )
-    setSelectedArray(highlightArray)
-  }, [topicComments])
-
+  let key = 0
   useEffect(() => {
     const addKey = (element) => {
       if (element.children.length > 0) {
@@ -89,10 +73,17 @@ export const SingleNewsCard = (props) => {
   }, [])
 
   useEffect(() => {
+    const highlightArray = topicComments.map(
+      (topicComment) => topicComment.position
+    )
+    setSelectedArray(highlightArray)
+  }, [topicComments])
+
+  useEffect(() => {
     removeHighlight()
     getHighLight()
   }, [selectedArray])
-
+  
   const handleSelectedText = (e) => {
     const selectedText = window.getSelection()
     var element = document.getElementById('post-details')
@@ -123,6 +114,7 @@ export const SingleNewsCard = (props) => {
       }
       return
     }
+    console.log(rangeToObj(range))
     setCurrentHighlight(rangeToObj(range))
     setShowPopup(true)
     setPosition({ top, left })
@@ -140,16 +132,6 @@ export const SingleNewsCard = (props) => {
     setSelectedArray((prev) => [...prev, currentObject])
     setCurrentHighlight({})
   }
-
-  //last element in highlight in db and can not remove by clicking
-  // const addHighlight = () => {
-  //   setSelectedArray((prev) => {
-  //     const clone = [...prev]
-  //     const lastElement = clone[clone.length - 1]
-  //     lastElement.temp = undefined
-  //     return [...clone]
-  //   })
-  // }
 
   //remove on highlight is on the POST
   const removeHighlight = () => {
@@ -191,14 +173,8 @@ export const SingleNewsCard = (props) => {
   const deleteHighlight = (index = selectedArray.length - 1) => {
     if (!selectedArray[index]) return
     let tempArray = [...selectedArray]
-    const {
-      startKey,
-      startOffset,
-      startTextIndex,
-      endKey,
-      endOffset,
-      endTextIndex,
-    } = tempArray[index]
+    const { startKey, startOffset, startTextIndex, endKey, endOffset } =
+      tempArray[index]
     let currentStartIndex = startTextIndex
     for (let i = index + 1; i < tempArray.length; i++) {
       if (startKey === endKey) {
@@ -248,10 +224,6 @@ export const SingleNewsCard = (props) => {
   return (
     <>
       <div className="entity_title">
-        {/* <button type="button">add Highlight</button>
-        <button type="button" onClick={removeHighlight}>
-          delete Highlight
-        </button> */}
         <h1>
           <a href="#">{news.title}</a>
         </h1>

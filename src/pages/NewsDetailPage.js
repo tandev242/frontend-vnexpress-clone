@@ -24,10 +24,7 @@ export default function NewsDetailPage() {
   const [showAddTopic, setShowAddTopic] = useState(false)
   const [newTopicComment, setNewTopicComment] = useState({})
   const [newPostComment, setNewPostComment] = useState({})
-
   const { authenticated, user } = useSelector((state) => state.auth)
-
-  //call children function from parent component
 
   useEffect(() => {
     const fetchPostBySlug = async () => {
@@ -78,19 +75,10 @@ export default function NewsDetailPage() {
       } else {
         alert('Thêm bình luận về chủ đề thật bại')
       }
+      newTopicComment.content = ''
+      setShowAddTopic(false)
     }
   }
-
-  // const getSelectedArray = useCallback(
-  //   (array) => {
-  //     var output = []
-  //     array.forEach((element) => {
-  //       output.push(element.position)
-  //     })
-  //     return output
-  //   },
-  //   [topicComments]
-  // )
 
   return (
     <section id="entity_section" className="entity_section">
