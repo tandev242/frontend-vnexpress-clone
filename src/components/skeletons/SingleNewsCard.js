@@ -73,9 +73,9 @@ export const SingleNewsCard = (props) => {
   }, [])
 
   useEffect(() => {
-    const highlightArray = topicComments.map(
-      (topicComment) => topicComment.position
-    )
+    const highlightArray = topicComments
+      .map((topicComment) => topicComment.position)
+      .reverse()
     setSelectedArray(highlightArray)
   }, [topicComments])
 
@@ -83,7 +83,7 @@ export const SingleNewsCard = (props) => {
     removeHighlight()
     getHighLight()
   }, [selectedArray])
-  
+
   const handleSelectedText = (e) => {
     const selectedText = window.getSelection()
     var element = document.getElementById('post-details')
@@ -114,7 +114,6 @@ export const SingleNewsCard = (props) => {
       }
       return
     }
-    console.log(rangeToObj(range))
     setCurrentHighlight(rangeToObj(range))
     setShowPopup(true)
     setPosition({ top, left })
