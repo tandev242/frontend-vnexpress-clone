@@ -1374,7 +1374,7 @@ section {
 }
 
 .widget .media.comment.active {
-  background-color: #099bdd;
+  border: 15px solid rgb(185, 177, 177);
 }
 
 .widget .media.sub-comment {

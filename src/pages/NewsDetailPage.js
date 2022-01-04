@@ -12,7 +12,8 @@ import { CommentForm } from '../components/includes/CommentForm'
 import { Link, useRouteMatch } from 'react-router-dom'
 import { getPostBySlug } from '../slices/postSlice'
 import { addTopicComment, addPostComment } from '../slices/commentSlice'
-
+import { io } from 'socket.io-client'
+let socket
 export default function NewsDetailPage() {
   const dispatch = useDispatch()
   let match = useRouteMatch()
@@ -26,6 +27,8 @@ export default function NewsDetailPage() {
   const { authenticated, user } = useSelector((state) => state.auth)
   const [clickedTopicId, setClickedTopicId] = useState(null)
   //call children function from parent component
+  const ENDPOINT = 'localhost:7000'
+
   useEffect(() => {
     const fetchPostBySlug = async () => {
       const res = await dispatch(getPostBySlug(slug)).unwrap()
@@ -42,18 +45,49 @@ export default function NewsDetailPage() {
     setNewPostComment({ postId: post._id })
   }, [post])
 
+  useEffect(() => {
+    socket = io(ENDPOINT)
+    const room = slug
+    socket.emit('join', { avatar: user.avatar, name: user.name, room })
+    return () => {
+      socket.disconnect()
+    }
+  }, [])
+  useEffect(() => {
+    if (!Object.keys(user).length) return
+    socket.emit('updateUser', { avatar: user.avatar, name: user.name })
+  }, [user])
+
+  useEffect(() => {
+    socket.on('addTopicComment', ({ user, topicComment }) => {
+      setTopicComments((prev) => [...prev, topicComment])
+    })
+    socket.on('message', ({ user, text }) => {
+      console.log(user, text)
+    })
+    socket.on('addPostComment', ({ user, postComment }) => {
+      setPostComments((prev) => [postComment, ...prev])
+    })
+    socket.on('addPostComment', ({ user, commentId, type, reply }) => { })
+  }, [])
+
   if (Object.keys(post).length === 0) {
     return <Loading />
   }
-
+  const EmitAddSubCommentEvent = () => { }
   const handleSubmitAddPostComment = async (e) => {
     e.preventDefault()
     if (newPostComment.content && newPostComment.postId) {
       const res = await dispatch(addPostComment(newPostComment)).unwrap()
       if (res.data.success) {
-
+        alert('Thêm bình luận về bài viết thành công')
+        let res = await dispatch(getPostBySlug(slug)).unwrap()
+        setPostComments(res.data.postComments)
+        socket.emit('userAddPostComment', {
+          postComment: res.data.postComments[0],
+        })
       } else {
-        alert('Thêm bình luận về bài viết thật bại')
+        alert('Thêm bình luận về bài viết thất bại')
       }
     }
   }
@@ -67,14 +101,20 @@ export default function NewsDetailPage() {
     ) {
       const res = await dispatch(addTopicComment(newTopicComment)).unwrap()
       if (res.data.success) {
+        alert('Thêm bình luận về chủ đề thành công')
+        let res = await dispatch(getPostBySlug(slug)).unwrap()
+        setTopicComments(res.data.topicComments)
+        socket.emit('userAddTopicComment', {
+          topicComment:
+            res.data.topicComments[res.data.topicComments.length - 1],
+        })
       } else {
-        alert('Thêm bình luận về chủ đề thật bại')
+        alert('Thêm bình luận về chủ đề thất bại')
       }
       newTopicComment.content = ''
       setShowAddTopic(false)
     }
   }
-
   return (
     <section id="entity_section" className="entity_section">
       <div className="container">
@@ -161,7 +201,12 @@ export default function NewsDetailPage() {
                   />
                 )}
                 {topicComments.length > 0 ? (
-                  <Comments comments={topicComments} user={user} type="topic" clickedTopicId={clickedTopicId} />
+                  <Comments
+                    comments={[...topicComments].reverse()}
+                    user={user}
+                    type="topic"
+                    clickedTopicId={clickedTopicId}
+                  />
                 ) : (
                   <h3>Hiện tại chưa có bất kì bàn luận nào về chủ đề </h3>
                 )}

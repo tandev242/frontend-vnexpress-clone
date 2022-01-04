@@ -29,12 +29,25 @@ export const Comments = (props) => {
         }, 1000 * 60)
     }, [dateNow])
 
+    const orderToTop = (array) => {
+        var arr = [...array]
+        if (clickedTopicId) {
+            const index = array.findIndex(e => e._id === clickedTopicId)
+            var tmp = arr[0]
+            arr[0] = arr[index]
+            arr[index] = tmp
+        }
+        return arr
+    }
+
     return (
         <Fragment>
             {comments &&
-                comments.map((comment, index) => {
+                orderToTop(comments).map((comment, index) => {
                     return (
-                        <div className={`media comment ${clickedTopicId === comment._id ? "active" : ""}`} key={index} style={comment.position && { borderColor: comment.position.color }}>
+                        <div className={`media comment ${clickedTopicId === comment._id ? "active" : ""}`}
+                            key={index}
+                            style={comment.position && { borderColor: comment.position.color }}>
                             <div className="media-left">
                                 <a href="#">
                                     <img
