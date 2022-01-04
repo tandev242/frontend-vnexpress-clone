@@ -25,7 +25,6 @@ const objToRange = (rangeStr) => {
   if (!rangeStr.startKey || !rangeStr.endKey) {
     throw new Error('rangStr invalid')
   }
-
   range.setStart(
     document.querySelector('[data-key="' + rangeStr.startKey + '"]').childNodes[
       rangeStr.startTextIndex
@@ -59,6 +58,7 @@ export const SingleNewsCard = (props) => {
   const [showPopup, setShowPopup] = useState(false)
   const [selectedArray, setSelectedArray] = useState([])
   const [currentHighlight, setCurrentHighlight] = useState({})
+
   let key = 0
   useEffect(() => {
     const addKey = (element) => {
@@ -73,9 +73,9 @@ export const SingleNewsCard = (props) => {
   }, [])
 
   useEffect(() => {
-    const highlightArray = topicComments
-      .map((topicComment) => topicComment.position)
-      .reverse()
+    const highlightArray = topicComments.map(
+      (topicComment) => topicComment.position
+    )
     setSelectedArray(highlightArray)
   }, [topicComments])
 
@@ -83,7 +83,7 @@ export const SingleNewsCard = (props) => {
     removeHighlight()
     getHighLight()
   }, [selectedArray])
-
+  console.log(selectedArray)
   const handleSelectedText = (e) => {
     const selectedText = window.getSelection()
     var element = document.getElementById('post-details')
