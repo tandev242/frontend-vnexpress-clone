@@ -52,28 +52,39 @@ export default function NewsDetailPage() {
       socket.disconnect()
     }
   }, [])
+
   useEffect(() => {
     if (!Object.keys(user).length) return
     socket.emit('updateUser', { avatar: user.avatar, name: user.name })
   }, [user])
-
   useEffect(() => {
-    socket.on('addTopicComment', ({ user, topicComment }) => {
+    socket.on('addTopicComment', ({ topicComment }) => {
       setTopicComments((prev) => [...prev, topicComment])
     })
     socket.on('message', ({ user, text }) => {
       console.log(user, text)
     })
-    socket.on('addPostComment', ({ user, postComment }) => {
+    socket.on('addPostComment', ({ postComment }) => {
       setPostComments((prev) => [postComment, ...prev])
     })
-    socket.on('addPostComment', ({ user, commentId, type, reply }) => {})
+    socket.on('addSubComment', ({ reply, type }) => {
+      if (type === 'topic') {
+        setTopicComments((prev) => {
+          let cloneComments = [...prev]
+          let comment = cloneComments.find(
+            (comment) => comment._id === reply._id
+          )
+          comment.subComments.push(reply)
+          return cloneComments
+        })
+      }
+    })
   }, [])
 
   if (Object.keys(post).length === 0) {
     return <Loading />
   }
-  const EmitAddSubCommentEvent = () => {}
+
   const handleSubmitAddPostComment = async (e) => {
     e.preventDefault()
     if (newPostComment.content && newPostComment.postId) {
@@ -114,6 +125,11 @@ export default function NewsDetailPage() {
       setShowAddTopic(false)
     }
   }
+  const emitAddSubCommentEvent = (reply, type) => {
+    // console.log(reply, type)
+    socket.emit('userAddSubComment', { reply, type })
+  }
+
   return (
     <section id="entity_section" className="entity_section">
       <div className="container">
@@ -158,6 +174,7 @@ export default function NewsDetailPage() {
                     setContent={(content) =>
                       setNewPostComment({ ...newPostComment, content })
                     }
+                    emitAddSubCommentEvent={emitAddSubCommentEvent}
                   />
                 ) : (
                   <p>
@@ -173,7 +190,12 @@ export default function NewsDetailPage() {
                     <div className="entity_inner__title header_purple">
                       <h2>Bình luận [{postComments.length}]</h2>
                     </div>
-                    <Comments comments={postComments} user={user} type="post" />
+                    <Comments
+                      comments={[...postComments]}
+                      user={user}
+                      type="post"
+                      emitAddSubCommentEvent={emitAddSubCommentEvent}
+                    />
                   </Fragment>
                 ) : (
                   ''
@@ -200,9 +222,10 @@ export default function NewsDetailPage() {
                 )}
                 {topicComments.length > 0 ? (
                   <Comments
-                    comments={[...topicComments].reverse()}
+                    comments={[...topicComments]}
                     user={user}
                     type="topic"
+                    emitAddSubCommentEvent={emitAddSubCommentEvent}
                   />
                 ) : (
                   <h3>Hiện tại chưa có bất kì bàn luận nào về chủ đề </h3>

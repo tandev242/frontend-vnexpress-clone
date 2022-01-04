@@ -1,17 +1,25 @@
-import React, { Fragment, useState } from 'react'
+import React, { Fragment, useState, useEffect } from 'react'
 import NoAvatar from '../../assets/images/user-icon.png'
 import { ReplyForm } from './ReplyForm'
 
 export const Comments = (props) => {
-  const { comments, user, type } = props
-  const { allComment, setAllComment } = useState(comments)
+  const { comments, user, type, emitAddSubCommentEvent } = props
+  const [allComment, setAllComment] = useState(comments.reverse())
+  useEffect(() => {
+    setAllComment([...comments].reverse())
+  }, [comments])
+
   const addSubCommentHandler = (reply) => {
+    // console.log(reply)
+    // console.log(allComment)
     let cloneComments = [...allComment]
-    let comment = cloneComments.find((comment) => comment.id === reply._id)
-    comment.push(reply)
+    const comment = cloneComments.find((comment) => comment._id === reply._id)
+    comment.subComments.push(reply)
+    emitAddSubCommentEvent(reply, type)
     setAllComment(cloneComments)
   }
-
+  console.log(comments)
+  console.log(allComment)
   return (
     <Fragment>
       {allComment &&

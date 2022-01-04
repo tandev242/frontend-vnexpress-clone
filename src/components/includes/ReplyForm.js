@@ -16,11 +16,14 @@ export const ReplyForm = (props) => {
     if (reply._id && reply.content) {
       if (type === 'topic') {
         await dispatch(addSubTopicComment(reply))
-        addSubComment(reply)
+        reply.userId = {}
+        reply.userId.avatar = user.avatar
+        reply.userId.name = user.name
+        addSubComment(reply, 'topic')
       } else if (type === 'post') {
         await dispatch(addSubPostComment(reply))
       }
-      setReply({})
+      setReply({ content: '' })
     }
   }
 

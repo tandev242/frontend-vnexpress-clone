@@ -71,7 +71,7 @@ export const SingleNewsCard = (props) => {
     }
     addKey(document.querySelector('#post-details'))
   }, [])
-
+  // console.log(selectedArray)
   useEffect(() => {
     const highlightArray = topicComments.map(
       (topicComment) => topicComment.position
@@ -83,7 +83,7 @@ export const SingleNewsCard = (props) => {
     removeHighlight()
     getHighLight()
   }, [selectedArray])
-  console.log(selectedArray)
+
   const handleSelectedText = (e) => {
     const selectedText = window.getSelection()
     var element = document.getElementById('post-details')
