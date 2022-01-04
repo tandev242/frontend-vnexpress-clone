@@ -9,6 +9,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import { useDispatch } from 'react-redux'
 import { getListCategory, getAllPosts, getLastPosts } from './slices/postSlice'
 import { getCurrentUser } from './slices/authSlice'
+import { SocketContext, socket } from './context/socket'
 
 const history = createBrowserHistory()
 
@@ -36,14 +37,16 @@ function App() {
   }, [])
 
   return (
-    <Router history={history}>
-      <div id="main-wrapper">
-        <ToastContainer />;
-        <Header />
-        <BaseRouter />
-        <Footer />
-      </div>
-    </Router>
+    <SocketContext.Provider value={socket}>
+      <Router history={history}>
+        <div id="main-wrapper">
+          <ToastContainer />;
+          <Header />
+          <BaseRouter />
+          <Footer />
+        </div>
+      </Router>
+    </SocketContext.Provider>
   )
 }
 

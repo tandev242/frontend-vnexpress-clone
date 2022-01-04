@@ -2,8 +2,7 @@ import React, {
   Fragment,
   useState,
   useEffect,
-  useRef,
-  useCallback,
+  useContext
 } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { SingleNewsCard } from '../components/skeletons/SingleNewsCard'
@@ -24,11 +23,9 @@ export default function NewsDetailPage() {
   const [showAddTopic, setShowAddTopic] = useState(false)
   const [newTopicComment, setNewTopicComment] = useState({})
   const [newPostComment, setNewPostComment] = useState({})
-
   const { authenticated, user } = useSelector((state) => state.auth)
-
+  const [clickedTopicId, setClickedTopicId] = useState(null)
   //call children function from parent component
-
   useEffect(() => {
     const fetchPostBySlug = async () => {
       const res = await dispatch(getPostBySlug(slug)).unwrap()
@@ -54,9 +51,7 @@ export default function NewsDetailPage() {
     if (newPostComment.content && newPostComment.postId) {
       const res = await dispatch(addPostComment(newPostComment)).unwrap()
       if (res.data.success) {
-        alert('Thêm bình luận về bài viết thành công')
-        let res = await dispatch(getPostBySlug(slug)).unwrap()
-        setTopicComments(res.data.postComments)
+
       } else {
         alert('Thêm bình luận về bài viết thật bại')
       }
@@ -72,12 +67,10 @@ export default function NewsDetailPage() {
     ) {
       const res = await dispatch(addTopicComment(newTopicComment)).unwrap()
       if (res.data.success) {
-        alert('Thêm bình luận về chủ đề thành công')
-        let res = await dispatch(getPostBySlug(slug)).unwrap()
-        setTopicComments(res.data.topicComments)
       } else {
         alert('Thêm bình luận về chủ đề thật bại')
       }
+      setShowAddTopic(false)
     }
   }
 
@@ -105,6 +98,7 @@ export default function NewsDetailPage() {
                   newTopicComment={newTopicComment}
                   setNewTopicComment={setNewTopicComment}
                   topicComments={topicComments}
+                  setClickedTopicId={setClickedTopicId}
                 />
                 {/* entity_content */}
                 <div className="entity_footer">
@@ -177,7 +171,7 @@ export default function NewsDetailPage() {
                   />
                 )}
                 {topicComments.length > 0 ? (
-                  <Comments comments={topicComments} user={user} type="topic" />
+                  <Comments comments={topicComments} user={user} type="topic" clickedTopicId={clickedTopicId} />
                 ) : (
                   <h3>Hiện tại chưa có bất kì bàn luận nào về chủ đề </h3>
                 )}
