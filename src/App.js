@@ -36,14 +36,14 @@ function App() {
   }, [])
 
   return (
-    <Router history={history}>
-      <div id="main-wrapper">
-        <ToastContainer />;
-        <Header />
-        <BaseRouter />
-        <Footer />
-      </div>
-    </Router>
+      <Router history={history}>
+        <div id="main-wrapper">
+          <ToastContainer />;
+          <Header />
+          <BaseRouter />
+          <Footer />
+        </div>
+      </Router>
   )
 }
 
