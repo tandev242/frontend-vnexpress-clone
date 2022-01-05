@@ -92,7 +92,6 @@ export default function NewsDetailPage() {
   if (Object.keys(post).length === 0) {
     return <Loading />
   }
-
   const handleSubmitAddPostComment = async (e) => {
     e.preventDefault()
     if (newPostComment.content && newPostComment.postId) {
@@ -241,12 +240,6 @@ export default function NewsDetailPage() {
                 ) : (
                   <h3>Hiện tại chưa có bất kì bàn luận nào về chủ đề </h3>
                 )}
-
-                {/* <p className="widget_divider">
-                                            <a href="#" target="_self">
-                                                Xem thêm&nbsp&raquo
-                                            </a>
-                                        </p> */}
               </div>
             </div>
           </Fragment>
