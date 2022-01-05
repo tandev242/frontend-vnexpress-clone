@@ -53,7 +53,13 @@ const colors = [
 ]
 
 export const SingleNewsCard = (props) => {
-  const { news, setShowAddTopic, setNewTopicComment, topicComments } = props
+  const {
+    news,
+    setShowAddTopic,
+    setNewTopicComment,
+    topicComments,
+    setClickedTopicId,
+  } = props
   const [position, setPosition] = useState({})
   const [showPopup, setShowPopup] = useState(false)
   const [selectedArray, setSelectedArray] = useState([])
@@ -73,9 +79,11 @@ export const SingleNewsCard = (props) => {
   }, [])
   // console.log(selectedArray)
   useEffect(() => {
-    const highlightArray = topicComments.map(
-      (topicComment) => topicComment.position
-    )
+    const highlightArray = topicComments.map((topicComment) => {
+      var newItem = topicComment.position
+      newItem._id = topicComment._id
+      return newItem
+    })
     setSelectedArray(highlightArray)
   }, [topicComments])
 
@@ -119,6 +127,12 @@ export const SingleNewsCard = (props) => {
     setPosition({ top, left })
   }
 
+  $('.highlight').on('click', function () {
+    var _id = $(this).attr('_id')
+    if (_id) {
+      setClickedTopicId(_id)
+    }
+  })
   //push current highlight into selected Array temporary
   const addTempHighlight = () => {
     if (Object.keys(currentHighlight).length === 0) return
@@ -154,6 +168,7 @@ export const SingleNewsCard = (props) => {
           : [sel.focusNode.parentNode]
         $(list).each(function () {
           $(this).addClass('highlight')
+          $(this).attr('_id', each._id)
         })
       })
     } catch (error) {

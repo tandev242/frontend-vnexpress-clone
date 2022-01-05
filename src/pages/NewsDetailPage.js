@@ -26,6 +26,7 @@ export default function NewsDetailPage() {
   const [newTopicComment, setNewTopicComment] = useState({})
   const [newPostComment, setNewPostComment] = useState({})
   const { authenticated, user } = useSelector((state) => state.auth)
+  const [clickedTopicId, setClickedTopicId] = useState(null)
   const ENDPOINT = 'localhost:7000'
 
   useEffect(() => {
@@ -143,6 +144,7 @@ export default function NewsDetailPage() {
                   newTopicComment={newTopicComment}
                   setNewTopicComment={setNewTopicComment}
                   topicComments={topicComments}
+                  setClickedTopicId={setClickedTopicId}
                 />
                 {/* entity_content */}
                 <div className="entity_footer">
@@ -222,10 +224,11 @@ export default function NewsDetailPage() {
                 )}
                 {topicComments.length > 0 ? (
                   <Comments
-                    comments={[...topicComments]}
+                    comments={topicComments}
                     user={user}
                     type="topic"
                     emitAddSubCommentEvent={emitAddSubCommentEvent}
+                    clickedTopicId={clickedTopicId}
                   />
                 ) : (
                   <h3>Hiện tại chưa có bất kì bàn luận nào về chủ đề </h3>

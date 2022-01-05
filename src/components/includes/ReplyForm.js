@@ -5,7 +5,6 @@ import {
   addSubPostComment,
 } from '../../slices/commentSlice'
 import { useDispatch } from 'react-redux'
-import { Link, useRouteMatch } from 'react-router-dom'
 
 export const ReplyForm = (props) => {
   const { comment, user, type, addSubComment } = props
@@ -16,6 +15,7 @@ export const ReplyForm = (props) => {
     if (reply._id && reply.content) {
       if (type === 'topic') {
         await dispatch(addSubTopicComment(reply))
+        reply.createdAt = Date.now()
         reply.userId = {}
         reply.userId.avatar = user.avatar
         reply.userId.name = user.name

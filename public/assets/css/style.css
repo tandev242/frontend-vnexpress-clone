@@ -1936,3 +1936,14 @@ figcaption {
 .h-100 {
   height: 100% !important;
 }
+
+.media-heading.comment {
+  display: flex;
+  justify-content: space-between;
+}
+
+.comment-time {
+  font-size: 12px;
+  margin-right: 5px;
+  font-weight: normal;
+}
