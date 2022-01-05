@@ -23,17 +23,30 @@ export const Comments = (props) => {
       return _data.seconds + 's'
     }
   }
+  const orderToTop = (array) => {
+    var arr = [...array]
+    if (clickedTopicId) {
+      const index = array.findIndex((e) => e._id === clickedTopicId)
+      var tmp = arr[0]
+      arr[0] = arr[index]
+      arr[index] = tmp
+    }
+    return arr
+  }
   useEffect(() => {
     setInterval(() => {
       setDateNow(Date.now())
     }, 1000 * 60)
   }, [dateNow])
+
   useEffect(() => {
     setAllComment([...comments].reverse())
   }, [comments])
 
-  const addSubCommentHandler = (reply) => {
+  const addSubCommentHandler = (reply, type) => {
     let cloneComments = [...allComment]
+    // console.log(cloneComments)
+    // console.log(reply)
     const comment = cloneComments.find((comment) => comment._id === reply._id)
     comment.subComments.push(reply)
     emitAddSubCommentEvent(reply, type)
@@ -43,7 +56,7 @@ export const Comments = (props) => {
   return (
     <Fragment>
       {allComment &&
-        allComment.map((comment, index) => {
+        orderToTop(allComment).map((comment, index) => {
           return (
             <div
               className={`media comment ${

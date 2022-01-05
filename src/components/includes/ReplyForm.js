@@ -12,6 +12,11 @@ export const ReplyForm = (props) => {
   const dispatch = useDispatch()
   const handleReplyComment = async (e) => {
     e.preventDefault()
+    if (!Object.keys(user).length) {
+      prompt('ban phai dang nhap')
+      setReply({ content: '' })
+      return
+    }
     if (reply._id && reply.content) {
       if (type === 'topic') {
         await dispatch(addSubTopicComment(reply))
@@ -22,6 +27,11 @@ export const ReplyForm = (props) => {
         addSubComment(reply, 'topic')
       } else if (type === 'post') {
         await dispatch(addSubPostComment(reply))
+        reply.createdAt = Date.now()
+        reply.userId = {}
+        reply.userId.avatar = user.avatar
+        reply.userId.name = user.name
+        addSubComment(reply, 'post')
       }
       setReply({ content: '' })
     }

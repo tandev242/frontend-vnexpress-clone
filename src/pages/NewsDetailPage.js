@@ -1,10 +1,4 @@
-import React, {
-  Fragment,
-  useState,
-  useEffect,
-  useRef,
-  useCallback,
-} from 'react'
+import React, { Fragment, useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { SingleNewsCard } from '../components/skeletons/SingleNewsCard'
 import { Loading } from '../components/includes/Loading'
@@ -58,6 +52,7 @@ export default function NewsDetailPage() {
     if (!Object.keys(user).length) return
     socket.emit('updateUser', { avatar: user.avatar, name: user.name })
   }, [user])
+
   useEffect(() => {
     socket.on('addTopicComment', ({ topicComment }) => {
       setTopicComments((prev) => [...prev, topicComment])
@@ -66,11 +61,23 @@ export default function NewsDetailPage() {
       console.log(user, text)
     })
     socket.on('addPostComment', ({ postComment }) => {
-      setPostComments((prev) => [postComment, ...prev])
+      setPostComments((prev) => [...prev, postComment])
     })
     socket.on('addSubComment', ({ reply, type }) => {
       if (type === 'topic') {
         setTopicComments((prev) => {
+          let cloneComments = [...prev]
+          let comment = cloneComments.find(
+            (comment) => comment._id === reply._id
+          )
+          //don't understand why it push two times
+          if (!comment.subComments.includes(reply)) {
+            comment.subComments.push(reply)
+          }
+          return cloneComments
+        })
+      } else if (type === 'post') {
+        setPostComments((prev) => {
           let cloneComments = [...prev]
           let comment = cloneComments.find(
             (comment) => comment._id === reply._id
@@ -95,12 +102,13 @@ export default function NewsDetailPage() {
         let res = await dispatch(getPostBySlug(slug)).unwrap()
         setPostComments(res.data.postComments)
         socket.emit('userAddPostComment', {
-          postComment: res.data.postComments[0],
+          postComment: res.data.postComments[res.data.postComments.length - 1],
         })
       } else {
         alert('Thêm bình luận về bài viết thất bại')
       }
     }
+    newPostComment.content = ''
   }
 
   const handleSubmitAddTopicComment = async (e) => {
@@ -115,6 +123,7 @@ export default function NewsDetailPage() {
         alert('Thêm bình luận về chủ đề thành công')
         let res = await dispatch(getPostBySlug(slug)).unwrap()
         setTopicComments(res.data.topicComments)
+        console.log(res.data.topicComments)
         socket.emit('userAddTopicComment', {
           topicComment:
             res.data.topicComments[res.data.topicComments.length - 1],
@@ -127,7 +136,6 @@ export default function NewsDetailPage() {
     }
   }
   const emitAddSubCommentEvent = (reply, type) => {
-    // console.log(reply, type)
     socket.emit('userAddSubComment', { reply, type })
   }
 
@@ -193,7 +201,7 @@ export default function NewsDetailPage() {
                       <h2>Bình luận [{postComments.length}]</h2>
                     </div>
                     <Comments
-                      comments={[...postComments]}
+                      comments={postComments}
                       user={user}
                       type="post"
                       emitAddSubCommentEvent={emitAddSubCommentEvent}
