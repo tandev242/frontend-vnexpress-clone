@@ -3,7 +3,7 @@ import { NavLink, Link, useHistory } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import moment from 'moment'
 import LOGO from '../../assets/images/logo-vnexpress.png'
-import { authAction } from '../../slices/authSlice'
+import { logout } from '../../slices/authSlice'
 
 export const Header = () => {
   const { categories } = useSelector((state) => state.post)
@@ -11,7 +11,7 @@ export const Header = () => {
   const dispatch = useDispatch()
   const history = useHistory()
   const HandleLogout = () => {
-    dispatch(authAction.logout())
+    dispatch(logout())
     history.push('/')
   }
   const handleMoveToProfilePage = () => {
@@ -128,6 +128,7 @@ export const Header = () => {
                     </Fragment>
                   )}
                 </ul>
+
                 {/* <!-- Language Section --> */}
 
                 <ul className="nav-cta hidden-xs">

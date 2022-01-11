@@ -91,7 +91,18 @@ export const uploadAvatar = createAsyncThunk(
       const formData = new FormData()
       formData.append('avatar', file)
       const response = await authApi.uploadAvatar(formData)
-      console.log(response)
+      return response
+    } catch (error) {
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const logout = createAsyncThunk(
+  'auth/logout',
+  async (params, { rejectWithValue }) => {
+    try {
+      const response = await authApi.logout()
       return response
     } catch (error) {
       return rejectWithValue(error.response.data)
@@ -111,7 +122,8 @@ export const authSlice = createSlice({
   initialState,
   reducers: {
     logout: (state) => {
-      window.localStorage.token = ''
+      window.localStorage.accessToken = ''
+      window.localStorage.refreshToken = ''
       state.authenticated = false
       state.user = {}
     },
@@ -143,7 +155,8 @@ export const authSlice = createSlice({
       state.loading = false
       state.authenticated = true
       state.user = action.payload.data.user
-      localStorage.setItem('token', action.payload.data.token)
+      localStorage.setItem('accessToken', action.payload.data.accessToken)
+      localStorage.setItem('refreshToken', action.payload.data.refreshToken)
     },
     [loginByGoogle.pending]: (state) => {
       state.loading = true
@@ -157,7 +170,8 @@ export const authSlice = createSlice({
       state.loading = false
       state.authenticated = true
       state.user = action.payload.data.user
-      localStorage.setItem('token', action.payload.data.token)
+      localStorage.setItem('accessToken', action.payload.data.accessToken)
+      localStorage.setItem('refreshToken', action.payload.data.refreshToken)
     },
     [register.pending]: (state) => {
       state.loading = true
@@ -210,8 +224,20 @@ export const authSlice = createSlice({
     },
     [uploadAvatar.fulfilled]: (state, action) => {
       state.loading = false
-
       state.user.avatar = action.payload.data.avatar
+    },
+    [logout.pending]: (state) => {
+      state.loading = true
+    },
+    [logout.rejected]: (state, action) => {
+      state.error = action.payload.msg
+    },
+    [logout.fulfilled]: (state, action) => {
+      state.loading = false
+      state.authenticated = false
+      state.user = {}
+      localStorage.removeItem('accessToken')
+      localStorage.removeItem('refreshToken')
     },
   },
 })

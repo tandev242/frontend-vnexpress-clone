@@ -22,7 +22,7 @@ function App() {
     const loadUser = async () => {
       await dispatch(getCurrentUser())
     }
-    if (!window.localStorage.getItem('token')) {
+    if (!window.localStorage.getItem('accessToken')) {
       return
     } else {
       loadUser()
@@ -36,14 +36,14 @@ function App() {
   }, [])
 
   return (
-      <Router history={history}>
-        <div id="main-wrapper">
-          <ToastContainer />;
-          <Header />
-          <BaseRouter />
-          <Footer />
-        </div>
-      </Router>
+    <Router history={history}>
+      <div id="main-wrapper">
+        <ToastContainer />;
+        <Header />
+        <BaseRouter />
+        <Footer />
+      </div>
+    </Router>
   )
 }
 

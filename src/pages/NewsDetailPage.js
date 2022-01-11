@@ -64,6 +64,7 @@ export default function NewsDetailPage() {
       setPostComments((prev) => [...prev, postComment])
     })
     socket.on('addSubComment', ({ reply, type }) => {
+      console.log(reply,type)
       if (type === 'topic') {
         setTopicComments((prev) => {
           let cloneComments = [...prev]
